@@ -3,7 +3,7 @@ import java.util.Optional;
 
 public class Calender {
     String calenderName;
-    private final ArrayList <Day> days = new ArrayList<>();
+    private ArrayList <Day> days = new ArrayList<>();
 
     public Calender(String name){
         this.calenderName = name;
@@ -11,7 +11,7 @@ public class Calender {
     public void addDay(Day day){
         int index = 0;
         while (index < days.size() && day.getDate().isAfter(days.get(index).getDate()))
-                index++;
+            index++;
             days.add(index, day);
         }
 

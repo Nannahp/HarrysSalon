@@ -1,52 +1,83 @@
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class Day {
     private LocalDate date;
-    private final ArrayList<String> bookings =  new ArrayList<>(Arrays.asList(new String[8]));
+    private ArrayList<Booking> bookings = new ArrayList<Booking>(8);
 
     public Day(int day, int month, int year) {
         try {
             this.date = LocalDate.of(year, month, day);
+            initializeBookings();
         } catch (DateTimeException e) {
             System.out.println("Date does not exist. Are you sure you have entered the right date?");
         }
     }
+
+    private void initializeBookings() {
+        for (int i = 1; i < 9; i++) {
+            bookings.add(new Booking(i, this));
+        }
+    }
+
+    public void displayBookingList() {
+        System.out.println("____" + this.getDate().toString() + " bookings____");
+        for (Booking booking : this.getBookings()) {
+            System.out.println(booking.toString() + "\n");
+        }
+        System.out.println("___________________");
+    }
+
     public LocalDate getDate() {
         return date;
     }
-    public void addBooking(String booking, int time){ //invariance, only between 10 and 18!
-        if (time < 10 || time > 17){
-            System.out.println("Time outside of schedule");}
-        else{
-            int index = time - 10;
-            bookings.set(index, booking);}
+
+    public void addBookingToTimeSlot(int id) {
+        System.out.println("adding booking to timeslot");
+        Scanner userInput = new Scanner(System.in);
+
+        if (id >= 1 && id <= 8) {
+            ArrayList<Booking> currentBookings = this.getBookings();
+
+            System.out.println("Booking " + currentBookings.get(id - 1).getDay().toString() + ": " + currentBookings.get(id - 1).getTimeSlot());
+            System.out.println("What is the name of the customer?");
+            currentBookings.get(id - 1).setCustomer(new Customer(userInput.nextLine()));
+            System.out.println(currentBookings.get(id - 1).getCustomer().getName());
+            System.out.println("What is the price of the haircut?");
+            currentBookings.get(id - 1).setHaircutPrice((double) userInput.nextInt());
+            System.out.println("Thank you for adding a booking.");
+        } else {
+            System.out.println("This is not a valid time slot. Try again.");
+        }
     }
 
-    public void showDay(){
+    public ArrayList<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void showDay() {
         System.out.println(date.getDayOfWeek().toString());
-        System.out.println(toString());
-        for (int i =0; i < bookings.size(); i++) {
-            System.out.print((i+10));
-            if (bookings.get(i) ==null){
-                System.out.println(": Available");}
-            else {
+        System.out.println(date.toString());
+        for (int i = 0; i < bookings.size(); i++) {
+            System.out.print((i + 10));
+            if (bookings.get(i) == null) {
+                System.out.println(": Available");
+            } else {
                 System.out.println(": Booked");
             }
         }
         System.out.println(" ");
     }
 
-
     @Override
     public String toString() {
-        return date.getDayOfMonth() + "-" + date.getMonthValue() + "-" +  date.getYear();
+        return date.getDayOfMonth() + "-" + date.getMonthValue() + "-" + date.getYear();
     }
 
-    @Override       // Makes it possible to compare instances of Day's only by their date.
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
