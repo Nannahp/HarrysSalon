@@ -18,9 +18,12 @@ public class Day {
     public LocalDate getDate() {
         return date;
     }
-    public void addBooking(String booking, int time){
-        int index = time - 10;
-        bookings.set(index, booking);
+    public void addBooking(String booking, int time){ //invariance, only between 10 and 18!
+        if (time < 10 || time > 17){
+            System.out.println("Time outside of schedule");}
+        else{
+            int index = time - 10;
+            bookings.set(index, booking);}
     }
 
     public void showDay(){
