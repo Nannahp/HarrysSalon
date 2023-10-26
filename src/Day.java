@@ -15,15 +15,16 @@ public class Day {
             System.out.println("Date does not exist. Are you sure you have entered the right date?");
         }
     }
-    /*public LocalDate getDate() {
+    public LocalDate getDate() {
         return date;
-    }*/
-    public void addBooking( String booking, int time){
+    }
+    public void addBooking(String booking, int time){
         int index = time - 10;
         bookings.set(index, booking);
     }
 
     public void showDay(){
+        System.out.println(date.getDayOfWeek().toString());
         System.out.println(toString());
         for (int i =0; i < bookings.size(); i++) {
             System.out.print((i+10));
@@ -39,7 +40,7 @@ public class Day {
 
     @Override
     public String toString() {
-        return date.getDayOfWeek().toString() + " " + date.getDayOfMonth() + "-" + date.getMonthValue() + "-" +  date.getYear();
+        return date.getDayOfMonth() + "-" + date.getMonthValue() + "-" +  date.getYear();
     }
 
     @Override       // Makes it possible to compare instances of Day's only by their date.

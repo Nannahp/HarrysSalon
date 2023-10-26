@@ -8,7 +8,7 @@ public class TestingGround {
         calender.addDay(new Day(30,3,1998));
 
 
-
+        calender.showCalender();
         Day date1 = calender.searchForDate(30,3,1998);
         date1.showDay();
         date1.addBooking("booking", 13);
@@ -19,7 +19,7 @@ public class TestingGround {
         date2.showDay();
         date2.addBooking("booking", 13);
         date2.showDay();
-
+        calender.showCalender();
 
     }
 }

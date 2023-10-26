@@ -9,9 +9,12 @@ public class Calender {
         this.calenderName = name;
     }
     public void addDay(Day day){
-        days.add(day);
-        //System.out.println("date added");
-    }
+        int index = 0;
+        while (index < days.size() && day.getDate().isAfter(days.get(index).getDate()))
+                index++;
+            days.add(index, day);
+        }
+
 
 
     public Day searchForDate(int day, int month, int year) {
@@ -27,5 +30,9 @@ public class Calender {
                 return newDay;
             }
         }
-
+    public void showCalender(){
+        for (Day day:days) {
+            System.out.println(day.toString());
+        }
+    }
 }
