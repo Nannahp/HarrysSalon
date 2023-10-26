@@ -8,6 +8,8 @@ public class Booking {
     public Booking (int id, Day day) {
         this.id = id;
         this.day = day;
+        this.customer = new Customer(null);
+        this.haircutPrice = 0;
 
         switch (id) {
             case 1 -> this.setTimeSlot("10:00 - 11:00");
@@ -51,11 +53,15 @@ public class Booking {
         this.day = day;
     }*/
 
+    public int getId() {
+        return id;
+    }
+
     public String getTimeSlot() {
         return timeSlot;
     }
 
-    public void setTimeSlot(String timeSlot) {
+    private void setTimeSlot(String timeSlot) {
         this.timeSlot = timeSlot;
     }
 
@@ -85,6 +91,11 @@ public class Booking {
 
     @Override
     public String toString() {
-        return "Booking : \nDate:" + this.getDay().toString() + ": " + this.getTimeSlot() + "\n Customer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-";
+        if (this.getCustomer() == null || this.getHaircutPrice() == 0) {
+            return "Booking " + this.getTimeSlot() + "\nCustomer name: " + "No customer yet" + "\nHaircut Price: " + "No price yet";
+        } else {
+            return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-";
+        }
+
     }
 }
