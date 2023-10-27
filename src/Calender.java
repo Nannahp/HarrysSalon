@@ -8,12 +8,14 @@ public class Calender {
     public Calender(String name){
         this.calenderName = name;
     }
-    public void addDay(Day day){
+    public void addDay(Day day) {
         int index = 0;
-        while (index < days.size() && day.getDate().isAfter(days.get(index).getDate()))
+        while (index < days.size() && day.getDate().isAfter(days.get(index).getDate())) {
             index++;
             days.add(index, day);
         }
+    }
+    //Har blot added nogle tuborg så det giver mening
 
 
 
@@ -30,6 +32,7 @@ public class Calender {
                 return newDay;
             }
         }
+
     public void showCalender(){
         for (Day day:days) {
             System.out.println(day.toString());

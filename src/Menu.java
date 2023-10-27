@@ -22,19 +22,17 @@ public class Menu {
     //Read the choice from the menu
     public int readChoice() {
         Scanner in = new Scanner(System.in);
-        boolean validChoice = false;
         int choice = -1;
 
         //Loop to read choice, that runs as long as the choice is valid
-        while (! validChoice) {
+        while (choice == -1) {
             if (in.hasNextInt()) {
                 choice = in.nextInt();
-                validChoice = true;
             } else {
+                System.out.println("Invalid input. Please enter a valid choice");
                 in.nextLine();
             }
         }
-
         return choice;
     }
 }

@@ -36,17 +36,17 @@ public class Day {
     }
 
     public void addBookingToTimeSlot(int id) {
-        System.out.println("adding booking to timeslot");
+        System.out.println("Adding booking to timeslot");
         Scanner userInput = new Scanner(System.in);
 
         if (id >= 1 && id <= 8) {
             ArrayList<Booking> currentBookings = this.getBookings();
 
             System.out.println("Booking " + currentBookings.get(id - 1).getDay().toString() + ": " + currentBookings.get(id - 1).getTimeSlot());
-            System.out.println("What is the name of the customer?");
+            System.out.print("What is the name of the customer: ");
             currentBookings.get(id - 1).setCustomer(new Customer(userInput.nextLine()));
-            System.out.println(currentBookings.get(id - 1).getCustomer().getName());
-            System.out.println("What is the price of the haircut?");
+            //System.out.println(currentBookings.get(id - 1).getCustomer().getName());
+            System.out.print("What is the price of the haircut: ");
             currentBookings.get(id - 1).setHaircutPrice((double) userInput.nextInt());
             System.out.println("Thank you for adding a booking.");
         } else {
