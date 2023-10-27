@@ -13,7 +13,9 @@ public class Day {
             this.date = LocalDate.of(year, month, day);
             initializeBookings();
         } catch (DateTimeException e) {
+            this.date = null;
             System.out.println("Date does not exist. Are you sure you have entered the right date?");
+
         }
     }
 

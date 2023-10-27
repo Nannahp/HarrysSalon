@@ -12,13 +12,18 @@ public class TestingGround {
 
         //I fucked up your method and made a new one --- lad os kigge på hvad vi synes virker bedst og gå videre
         //med den vi bedst kan lide
+
         Day date1 = calender.searchForDate(30,3,1998);
-        date1.displayBookingList();
+
         date1.addBookingToTimeSlot(1);
         date1.displayBookingList();
-        date1.addBookingToTimeSlot(3);
-        date1.addBookingToTimeSlot(7);
-        date1.displayBookingList();
+        //date1.addBookingToTimeSlot(3);
+        //date1.addBookingToTimeSlot(7);
+        //date1.displayBookingList();
+        Day date2 = calender.searchForDate(30,3,1998);
+        date2.displayBookingList();
+
+
 
 
 
