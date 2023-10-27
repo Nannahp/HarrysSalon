@@ -12,7 +12,7 @@ public class BookingSystem {
     public void run() {
         introMessage();
         //Insert login code here
-        //firstMenu();
+        firstMenu();
         //Enter search a date code here
         //bookingMenu();
 
@@ -65,8 +65,8 @@ public class BookingSystem {
         in.nextLine();
 
         Calender calender = new Calender("Harry's calender");
-        calender.searchForDate(day,month,year);
-        calender.showCalender();
+        Day date = calender.searchForDate(day,month,year);
+        date.showDay(); // edit, shows day instead of whole calander
     }
 
     //Method after selected date to either add, delete or edit bookings

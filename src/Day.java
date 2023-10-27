@@ -59,16 +59,18 @@ public class Day {
     }
 
     public void showDay() {
+        if (this.date !=null){      // makes sure that it doesn't crash if the date is impossible
         System.out.println(date.getDayOfWeek().toString());
-        System.out.println(date.toString());
+        System.out.println(this.toString());
         for (int i = 0; i < bookings.size(); i++) {
             System.out.print((i + 10));
-            if (bookings.get(i) == null) {
+            String customerName=bookings.get(i).getCustomer().getName();
+            if ( customerName== null) { //booking has no customer yet
                 System.out.println(": Available");
             } else {
                 System.out.println(": Booked");
             }
-        }
+        }}
         System.out.println(" ");
     }
 
