@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class BookingSystem {
     private ArrayList<Customer> customers = new ArrayList<>();
     private Scanner in = new Scanner(System.in);
+    private Calender calender = new Calender("Harry's calender");
 
     public static void main(String[] args) {
         new BookingSystem().run();
@@ -62,7 +63,6 @@ public class BookingSystem {
         in.nextLine(); //Scanner bug
         System.out.println(" "); //New line for better view when printing the day
 
-        Calender calender = new Calender("Harry's calender");
         Day givenDate = calender.searchForDate(day,month,year);
         givenDate.showDay(); // edit, shows day instead of whole calendar
 
@@ -120,11 +120,11 @@ public class BookingSystem {
     private void addBooking(int day, int month, int year) {
         int givenId = chooseTimeSlot("\nIn what time slot do you want add a booking? Please write here: ");
 
-        Calender calender = new Calender("Harry's calender");
         Day givenDate = calender.searchForDate(day,month,year);
         givenDate.addBookingToTimeSlot(givenId);
 
-        System.out.println("Here is the updated day: \n");
+
+        System.out.println("\nHere is the updated day: ");
         givenDate.showDay();
 
         Menu menu = new Menu("Now would you like to: ", new String[] {
