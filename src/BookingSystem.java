@@ -42,10 +42,15 @@ public class BookingSystem {
         switch (userChoice) {
             case 1:
                 enterDate();
+                break;
             case 2:
                 System.out.println("Goodbye for now!");
+                System.exit(0);
+                break;
             default:
-                System.out.println("Illegal choice. Please try again: ");
+                System.out.println("Illegal choice. Please try again. ");
+                firstMenu();
+                break;
         }
     }
 
@@ -72,7 +77,7 @@ public class BookingSystem {
     //Method after selected date to either add, delete or edit bookings
     //Parameters needed to know the date
     private void bookingMenu(int day, int month, int year) {
-        Menu menu = new Menu("Now you have the following choices: ", new String[] {
+        Menu menu = new Menu("You have the following choices: ", new String[] {
                 "1. Add a booking",
                 "2. Delete a booking"
                 //"3. Edit a booking"
@@ -86,14 +91,15 @@ public class BookingSystem {
         switch (userChoice) {
             case 1:
                 addBooking(day, month, year);
+                break;
             case 2:
                 System.out.println("Goodbye for now!");
                 System.exit(0);
-            case 3:
-                System.out.println("Goodbye for now!");
-                System.exit(0);
+                break;
             default:
                 System.out.println("Illegal choice. Please try again: ");
+                bookingMenu(day, month, year);
+                break;
         }
     }
 
@@ -140,11 +146,17 @@ public class BookingSystem {
         switch (userChoice) {
             case 1:
                 firstMenu();
+                break;
             case 2:
                 System.out.println("Goodbye for now!");
                 System.exit(0);
+                break;
             default:
                 System.out.println("Illegal choice. Please try again: ");
+                menu.printMenu();
+                System.out.print("Please write your choice here: ");
+                menu.readChoice();
+                break;
         }
     }
 
@@ -166,11 +178,15 @@ public class BookingSystem {
             case 1:
                 System.out.println("Goodbye for now!");
                 System.exit(0);
+                break;
             case 2:
                 System.out.println("Goodbye for now!");
                 System.exit(0);
+                break;
             default:
                 System.out.println("Illegal choice. Please try again: ");
+                editBooking();
+                break;
         }
     }
 
