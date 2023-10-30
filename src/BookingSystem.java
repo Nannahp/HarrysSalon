@@ -42,9 +42,11 @@ public class BookingSystem {
         int userChoice = menu.readChoice();
 
         switch (userChoice) {
+           
             case 1 -> runBookingMenu(enterDate());
             case 2 -> closeProgram();
             default -> System.out.println("Illegal choice. Please try again: "); //enhanced switch, to avoid break
+
         }
     }
 
@@ -65,14 +67,20 @@ public class BookingSystem {
             in.nextLine(); //Scanner bug
             System.out.println(" "); //New line for better view when printing the day
 
+        Day givenDate = calender.searchForDate(day,month,year);
+        givenDate.showDay(); // edit, shows day instead of whole calendar
+
+
         } while (calender.searchForDate(day, month, year) == null); // runs until a valid date is entered
         return calender.searchForDate(day, month, year);
     }
 
     //Method after selected date to either add, delete or edit bookings
+
     private void runBookingMenu(Day day) {
         day.showDay();
         Menu menu = new Menu("Now you have the following choices: ", new String[] {
+
                 "1. Add a booking",
                 "2. Delete a booking",
                 //"3. Edit a booking"
@@ -84,9 +92,11 @@ public class BookingSystem {
         int userChoice = menu.readChoice();
 
         switch (userChoice) {
+
             case 1 -> addBooking(day);
             case 2 -> closeProgram();
             default -> System.out.println("Returning to main menu ");
+
         }
     }
 
@@ -111,30 +121,26 @@ public class BookingSystem {
 
     private void addBooking(Day day) {
         int givenId = chooseTimeSlot("\nIn what time slot do you want add a booking? Please write here: ");
+
         day.addBookingToTimeSlot(givenId);
         System.out.println("Here is the updated day: \n");
         day.showDay();
         runBookingMenu(day); //IDK. if this is the best way to return to a menu?
-        /*
 
-        Menu menu = new Menu("Now would you like to: ", new String[] {
-                "1. Go back to Menu",
-                "2. Quit the system"
-        });
-
-        menu.printMenu();
-        System.out.print("Please write your choice here: ");
-
-        int userChoice = menu.readChoice();
-
-        switch (userChoice) {
-            case 1:
-                runFirstMenu();
+                firstMenu();
+                break;
             case 2:
-                closeProgram();
+                System.out.println("Goodbye for now!");
+                System.exit(0);
+                break;
             default:
                 System.out.println("Illegal choice. Please try again: ");
-        }*/
+                menu.printMenu();
+                System.out.print("Please write your choice here: ");
+                menu.readChoice();
+                break;
+        }
+
     }
 
     //Menu for editing bookings
@@ -156,8 +162,13 @@ public class BookingSystem {
                 closeProgram();
             case 2:
                 closeProgram();
+                System.out.println("Goodbye for now!");
+                System.exit(0);
+                break;
             default:
                 System.out.println("Illegal choice. Please try again: ");
+                editBooking();
+                break;
         }
     }
 
