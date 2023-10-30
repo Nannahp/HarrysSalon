@@ -119,24 +119,6 @@ public class BookingSystem {
         day.addBookingToTimeSlot(timeslotId);
 
 
-        System.out.println("Do you want to add products to the booking? y/n");
-        in.nextLine(); // scanner bug
-        userChoice = in.nextLine();
-        if (userChoice.equalsIgnoreCase("y")) {
-            day.getBookings().get(timeslotId).addProductsToBooking();
-        } else {
-            System.out.println("No products added to the booking.");
-        }
-
-        System.out.println("Here is the updated booking");
-        System.out.println(day.getBookings().get(timeslotId).getDay().toString());
-        System.out.println(day.getBookings().get(timeslotId).getCustomerName());
-        //System.out.println("display booking method");
-        //day.getBookings().get(timeslotId).displayBooking();
-        System.out.println("tostring method");
-        System.out.println(day.getBookings().get(timeslotId).toString());
-
-
         System.out.println("Here is the updated day: \n");
         day.showDay();
 
@@ -174,6 +156,7 @@ public class BookingSystem {
         Customer newCustomer = new Customer(name);
         customers.add(newCustomer);
     }
+
     private void closeProgram(){ // code was used a lot so made a method.
         System.out.println("Goodbye for now!");
         systemRunning = false;

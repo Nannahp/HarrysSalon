@@ -23,6 +23,8 @@ public class TestingGround {
         Day date2 = calender.searchForDate(30,3,1998);
         date2.displayBookingList();
 
+        date2.addBookingToTimeSlot(10);
+
 
 
 

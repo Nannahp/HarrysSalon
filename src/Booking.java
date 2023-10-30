@@ -8,12 +8,12 @@ public class Booking {
     private double haircutPrice;
     private Day day;
     private ArrayList<Product> products = new ArrayList<Product>();
-    private ArrayList<Product> availableProducts = new ProductBuilder().getProducts();
 
     public Booking (int id, Day day) {
         this.id = id;
         this.day = day;
-        this.customer = new Customer();
+        this.customer = new Customer(null);
+        this.haircutPrice = 0;
 
         switch (id) {
             case 1 -> this.setTimeSlot("10:00 - 11:00");
@@ -73,79 +73,33 @@ public class Booking {
     }
 
 
-    public void addProductsToBooking() {
-        Scanner userInput = new Scanner(System.in);
-        int chosenProductId;
-        String userChoice;
-
-        System.out.println("Here is a list of all the products available:");
-        for (Product product : availableProducts) {
-            System.out.println(product.getId() + ": " + product.getName());
-        }
-        System.out.println("What product do you want to add to the booking? (Type product id(number)");
-        chosenProductId = userInput.nextInt();
-
-        switch (chosenProductId) {
-            case 1 -> products.add(availableProducts.get(0));
-            case 2 -> products.add(availableProducts.get(1));
-            case 3 -> products.add(availableProducts.get(2));
-            case 4 -> products.add(availableProducts.get(3));
-            case 5 -> products.add(availableProducts.get(4));
-            case 6 -> products.add(availableProducts.get(5));
-            default -> System.out.println("Illegal choice. No products added.\nGo to edit booking menu.");
-        }
-
-        System.out.println("The booking has now " + products.size()+ " products.");
-        for (Product product : products) {
-            System.out.println(product.getName());
-        }
-        userInput.nextLine();
-        System.out.println("Add more? y/n");
-        userChoice = userInput.nextLine();
-        if (userChoice.equalsIgnoreCase("y")) {
-            addProductsToBooking();
-        } else {
-            System.out.println("Here is your updated booking:");
-            //this.displayBooking();
-            System.out.println("\n");
-        }
-
-    }
-
-
     @Override
     public String toString() {
-        return "Booking{" +
-                "id=" + id +
-                ", timeSlot='" + timeSlot + '\'' +
-                ", customer=" + customer.getName() +
-                ", haircutPrice=" + haircutPrice +
-                ", day=" + day +
-                ", products=" + products +
-                '}';
-    }
 
-    /*public void displayBooking(){
-        if (this.getCustomer() == null || this.getHaircutPrice() == 0) {
-            System.out.println("Booking " + this.getTimeSlot() + "\nCustomer name: " + "No customer yet" + "\nHaircut Price: " + "No price yet");
+        // String builder to build a a string of looped products because you can't loop in a return statement :)
+        StringBuilder sb = new StringBuilder("\nItem/s bought:\n");
+
+        for (int i = 0; i < this.getProducts().size(); i++) {
+            sb.append(this.getProducts().get(i).getName()).append(": ").append(this.getProducts().get(i).getPrice()).append(",-\n");
         }
-        else {
+        String str = sb.toString();
+
+        //Nested if
+
+        //If booking ISN'T empty (customer NOT null and/or price NOT 0 )
+        if (this.getCustomer() != null || this.getHaircutPrice() != 0) {
+            // then check if bookings products arrayList is empty
             if (!this.getProducts().isEmpty()) {
-                System.out.println("Booking " + this.getTimeSlot() + "\nCustomer name: " +
-                        this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() +
-                        ",-" + "\nHaircut Price: " + this.getHaircutPrice() + ",-" +
-                        "\nProduct/s bought:");
-                for (Product product: this.products){
-                    return product.getName() + ": " + product.getPrice() + ",-";
-                });
-
+                //IF NOT display this
+                return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-" + str;
             } else {
-                return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-"+ "\nHaircut Price: " + this.getHaircutPrice() + ",-";
+                // if YES display this
+                return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-";
             }
-
+            //If booking IS empty (customer null and/or price = 0 )
+        } else {
+            // then display this
+            return "Booking " + this.getTimeSlot() + "\nCustomer name: " + "No customer yet" + "\nHaircut Price: " + "No price yet";
         }
-
-
-    }*/
-
+    }
 }
