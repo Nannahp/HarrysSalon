@@ -115,26 +115,7 @@ public class BookingSystem {
         System.out.println("Here is the updated day: \n");
         day.showDay();
         runBookingMenu(day); //IDK. if this is the best way to return to a menu?
-        /*
 
-        Menu menu = new Menu("Now would you like to: ", new String[] {
-                "1. Go back to Menu",
-                "2. Quit the system"
-        });
-
-        menu.printMenu();
-        System.out.print("Please write your choice here: ");
-
-        int userChoice = menu.readChoice();
-
-        switch (userChoice) {
-            case 1:
-                runFirstMenu();
-            case 2:
-                closeProgram();
-            default:
-                System.out.println("Illegal choice. Please try again: ");
-        }*/
     }
 
     //Menu for editing bookings
