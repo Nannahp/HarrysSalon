@@ -6,6 +6,8 @@ public class Booking {
     private String timeSlot;
     private Customer customer;
     private double haircutPrice;
+    private double productPrice = 0;
+    private double bookingTotal;
     private Day day;
     private ArrayList<Product> products = new ArrayList<Product>();
 
@@ -72,11 +74,29 @@ public class Booking {
         return products;
     }
 
+    public double calcProductPrice(){
+
+            return productPrice;
+    }
+
+    public double calcTotal() {
+        if (!this.getProducts().isEmpty()) {
+            for (Product product: this.getProducts()) {
+                productPrice = productPrice + product.getPrice();
+            }
+            bookingTotal = haircutPrice + productPrice;
+        } else {
+            bookingTotal = haircutPrice;
+        }
+
+        return bookingTotal;
+    }
+
 
     @Override
     public String toString() {
 
-        // String builder to build a a string of looped products because you can't loop in a return statement :)
+        // String builder to build a string of looped products because you can't loop in a return statement :)
         StringBuilder sb = new StringBuilder("\nItem/s bought:\n");
 
         for (int i = 0; i < this.getProducts().size(); i++) {
@@ -91,10 +111,10 @@ public class Booking {
             // then check if bookings products arrayList is empty
             if (!this.getProducts().isEmpty()) {
                 //IF NOT display this
-                return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-" + str;
+                return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-" + str + "Booking total: " + this.calcTotal() + ",-\n";
             } else {
                 // if YES display this
-                return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-";
+                return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-" + "\nBooking total: " + this.calcTotal() + ",-\n";
             }
             //If booking IS empty (customer null and/or price = 0 )
         } else {
