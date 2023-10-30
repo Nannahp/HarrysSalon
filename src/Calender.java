@@ -10,28 +10,31 @@ public class Calender {
     }
     public void addDay(Day day) {
         int index = 0;
-        while (index < days.size() && day.getDate().isAfter(days.get(index).getDate())) {
-            index++;
-            days.add(index, day);
+        if (index == days.size()) {
+            days.add(index,day);
         }
-    }
-    //Har blot added nogle tuborg så det giver mening
+        else do{
+            days.add(index, day);
+            index++;}
+        while (index < days.size() && day.getDate().isAfter(days.get(index).getDate()));
+        }
 
 
 
     public Day searchForDate(int day, int month, int year) {
         Day dateSearchedFor = new Day(day, month, year);
-        Optional<Day> dateInList = days.stream().filter(x-> x.equals(dateSearchedFor)).findFirst();
-           if (dateInList.isPresent()) {
-               //System.out.println("found");
-                return dateInList.get() ;
+        if (dateSearchedFor.getDate() != null) { //only returns a Day if the day has a possible date.
+            Optional<Day> dateInList = days.stream().filter(x -> x.equals(dateSearchedFor)).findFirst();
+            if (dateInList.isPresent()) {
+                return dateInList.get();
             } else {
-               //System.out.println("not found");
                 Day newDay = new Day(day, month, year);
                 addDay(newDay);
                 return newDay;
             }
-        }
+        } else return null; //
+            }
+
 
     public void showCalender(){
         for (Day day:days) {

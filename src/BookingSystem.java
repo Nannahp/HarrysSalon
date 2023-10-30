@@ -4,20 +4,22 @@ import java.util.Scanner;
 public class BookingSystem {
     private ArrayList<Customer> customers = new ArrayList<>();
     private Scanner in = new Scanner(System.in);
-    private Calender calender = new Calender("Harry's calender");
+    Calender calender = new Calender("Harry's calender");
+    boolean systemRunning = true;
 
     public static void main(String[] args) {
         new BookingSystem().run();
+
     }
 
     public void run() {
-        introMessage();
+        showIntroMessage();
         //Insert login code here
-        firstMenu();
+        while(systemRunning){runFirstMenu();}
     }
 
     //Hardcoded intro message before login
-    private void introMessage() {
+    private void showIntroMessage() {
         System.out.println("\n-----------------------------------------------");
         System.out.println("WELCOME TO HARRY'S BOOKINGSYSTEM");
         System.out.println("-----------------------------------------------");
@@ -28,7 +30,7 @@ public class BookingSystem {
     }
 
     //First method with menu choice to quit or search for date
-    private void firstMenu() {
+    private void runFirstMenu() {
         Menu menu = new Menu("You have the following choices: ", new String[] {
                 "1. Search for a date",
                 "2. Quit the program"
@@ -40,75 +42,69 @@ public class BookingSystem {
         int userChoice = menu.readChoice();
 
         switch (userChoice) {
-            case 1:
-                enterDate();
-                break;
-            case 2:
-                System.out.println("Goodbye for now!");
-                System.exit(0);
-                break;
-            default:
-                System.out.println("Illegal choice. Please try again. ");
-                firstMenu();
-                break;
+           
+            case 1 -> runBookingMenu(enterDate());
+            case 2 -> closeProgram();
+            default -> System.out.println("Illegal choice. Please try again: "); //enhanced switch, to avoid break
+
         }
     }
 
-    private void enterDate() {
-        System.out.print("\nPlease give the date in format 'DD': ");
-        int day = in.nextInt();
-        in.nextLine(); //Scanner bug
+    private Day enterDate() {
+        int day, month, year;
 
-        System.out.print("Please give the month in format 'MM': ");
-        int month = in.nextInt();
-        in.nextLine(); //Scanner bug
+        do {
+            System.out.print("\nPlease give the date in format 'DD': ");
+            day = in.nextInt();
+            in.nextLine(); //Scanner bug
 
-        System.out.print("Please give the year in format 'YYYY': ");
-        int year = in.nextInt();
-        in.nextLine(); //Scanner bug
-        System.out.println(" "); //New line for better view when printing the day
+            System.out.print("Please give the month in format 'MM': ");
+            month = in.nextInt();
+            in.nextLine(); //Scanner bug
+
+            System.out.print("Please give the year in format 'YYYY': ");
+            year = in.nextInt();
+            in.nextLine(); //Scanner bug
+            System.out.println(" "); //New line for better view when printing the day
 
         Day givenDate = calender.searchForDate(day,month,year);
         givenDate.showDay(); // edit, shows day instead of whole calendar
 
-        bookingMenu(day, month, year);
+
+        } while (calender.searchForDate(day, month, year) == null); // runs until a valid date is entered
+        return calender.searchForDate(day, month, year);
     }
 
     //Method after selected date to either add, delete or edit bookings
-    //Parameters needed to know the date
-    private void bookingMenu(int day, int month, int year) {
-        Menu menu = new Menu("You have the following choices: ", new String[] {
-                "1. Add a booking",
-                "2. Delete a booking"
-                //"3. Edit a booking"
-        });
 
+    private void runBookingMenu(Day day) {
+        day.showDay();
+        Menu menu = new Menu("Now you have the following choices: ", new String[] {
+
+                "1. Add a booking",
+                "2. Delete a booking",
+                //"3. Edit a booking"
+                "3. Go back"
+        });
         menu.printMenu();
         System.out.print("Please write your choice here: ");
 
         int userChoice = menu.readChoice();
 
         switch (userChoice) {
-            case 1:
-                addBooking(day, month, year);
-                break;
-            case 2:
-                System.out.println("Goodbye for now!");
-                System.exit(0);
-                break;
-            default:
-                System.out.println("Illegal choice. Please try again: ");
-                bookingMenu(day, month, year);
-                break;
+
+            case 1 -> addBooking(day);
+            case 2 -> closeProgram();
+            default -> System.out.println("Returning to main menu ");
+
         }
     }
 
     private int chooseTimeSlot(String text) {
         int givenId = 0;
         System.out.print(text);
+        while(givenId < 1 || givenId >8){ // if timeslot is before 10 or after 17 then keep trying
         int enteredTimeslot = in.nextInt();
-        in.nextLine(); //Scanner bug
-
         switch (enteredTimeslot) {
             case 10 -> givenId = 1;
             case 11 -> givenId = 2;
@@ -118,33 +114,19 @@ public class BookingSystem {
             case 15 -> givenId = 6;
             case 16 -> givenId = 7;
             case 17 -> givenId = 8;
-            default -> System.out.println("This time slot does not seem to exist. Please write another timeslot: ");
-        }
+            default -> System.out.println("This is not a valid time slot. Please enter another time:");
+        }}
         return givenId;
     }
 
-    private void addBooking(int day, int month, int year) {
+    private void addBooking(Day day) {
         int givenId = chooseTimeSlot("\nIn what time slot do you want add a booking? Please write here: ");
 
-        Day givenDate = calender.searchForDate(day,month,year);
-        givenDate.addBookingToTimeSlot(givenId);
+        day.addBookingToTimeSlot(givenId);
+        System.out.println("Here is the updated day: \n");
+        day.showDay();
+        runBookingMenu(day); //IDK. if this is the best way to return to a menu?
 
-
-        System.out.println("\nHere is the updated day: ");
-        givenDate.showDay();
-
-        Menu menu = new Menu("Now would you like to: ", new String[] {
-                "1. Go back to Menu",
-                "2. Quit the system"
-        });
-
-        menu.printMenu();
-        System.out.print("Please write your choice here: ");
-
-        int userChoice = menu.readChoice();
-
-        switch (userChoice) {
-            case 1:
                 firstMenu();
                 break;
             case 2:
@@ -158,6 +140,7 @@ public class BookingSystem {
                 menu.readChoice();
                 break;
         }
+
     }
 
     //Menu for editing bookings
@@ -176,10 +159,9 @@ public class BookingSystem {
 
         switch (userChoice) {
             case 1:
-                System.out.println("Goodbye for now!");
-                System.exit(0);
-                break;
+                closeProgram();
             case 2:
+                closeProgram();
                 System.out.println("Goodbye for now!");
                 System.exit(0);
                 break;
@@ -193,5 +175,9 @@ public class BookingSystem {
     private void addCustomer(String name) {
         Customer newCustomer = new Customer(name);
         customers.add(newCustomer);
+    }
+    private void closeProgram(){ // code was used a lot so made a method.
+        System.out.println("Goodbye for now!");
+        systemRunning = false;
     }
 }
