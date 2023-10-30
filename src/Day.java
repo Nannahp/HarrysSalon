@@ -59,7 +59,7 @@ public class Day {
             currentBookings.get(arrayId).setHaircutPrice(haircutPrice);
 
 
-            System.out.println("Do you want to add products to the booking? y/n");
+            System.out.print("Do you want to add products to the booking? please enter y/n: ");
             userInput.nextLine(); // scanner bug
             userChoice = userInput.nextLine();
             if (userChoice.equalsIgnoreCase("y")) {
@@ -74,9 +74,79 @@ public class Day {
 
             System.out.println("Thank you for adding a booking.");
 
-
         } else {
             System.out.println("This is not a valid time slot. Try again.");
+        }
+    }
+
+    public void editCustomerNameByTimeSlot(int id) {
+        Scanner in = new Scanner(System.in);
+
+        if (id >= 1 && id <= 8) {
+            ArrayList<Booking> currentBookings = this.getBookings();
+            Booking bookingToEdit = currentBookings.get(id - 1);
+            if (bookingToEdit.getCustomerName() != null) {
+                System.out.print("Please write the name you want to change to: ");
+                String newName = in.nextLine();
+                bookingToEdit.setCustomerName(newName);
+                System.out.println("The name has been updated");
+            } else {
+                System.out.println("It seems that there is no booking in this time slot. Please look at\n " +
+                        "the updated day and see if you meant another time slot\n");
+            }
+        } else {
+            System.out.print("This is not a valid time slot. Please try again");
+        }
+    }
+
+    public void editHaircutPriceByTimeSlot(int id) {
+        Scanner in = new Scanner(System.in);
+
+        if (id >= 1 && id <= 8) {
+            ArrayList<Booking> currentBookings = this.getBookings();
+            Booking bookingToEdit = currentBookings.get(id - 1);
+            if (bookingToEdit.getHaircutPrice() != 0) {
+                System.out.print("Please write the new haircut price here: ");
+                double newPrice = in.nextInt();
+                in.nextLine(); //Scanner bug
+                bookingToEdit.setHaircutPrice(newPrice);
+                System.out.println("The haircut price has been updated");
+            } else {
+                System.out.println("It seems that there is no booking in this time slot. Please look at\n " +
+                        "the updated day and see if you meant another time slot\n");
+            }
+        } else {
+            System.out.print("This is not a valid time slot. Please try again");
+        }
+    }
+
+    public void deleteBookingByTimeSlot(int id) {
+        if (id >= 1 && id <= 8) {
+            ArrayList<Booking> currentBookings = this.getBookings();
+            Booking deletedBooking = currentBookings.get(id - 1);
+            Customer deletedCustomer = deletedBooking.getCustomer();
+
+            //Check if the given timeslot is booked
+            if (deletedCustomer.getName() != null) {
+                System.out.println("Deleting booking for " + deletedBooking.getDay().toString() + ": " +
+                        deletedBooking.getTimeSlot());
+
+                //Sets the booking to null by setting the customer to null. DisplayBooking
+                // shows correct but showDay crashes
+                //currentBookings.get(id - 1).setCustomer(null);
+
+                deletedCustomer.setName(null);
+                currentBookings.get(id - 1).setHaircutPrice(0);
+                currentBookings.get(id - 1).getProducts().clear();
+                //currentBookings.get(id - 1).setBookingTotal(0);
+                //currentBookings.set(id - 1, null);
+                System.out.println("The booking has been deleted");
+            } else {
+                System.out.println("No booking has been found in this timeslot\n");
+            }
+
+        } else {
+            System.out.print("This is not a valid time slot. Try again");
         }
     }
 
@@ -90,7 +160,7 @@ public class Day {
         for (Product product : availableProducts) {
             System.out.println(product.getId() + ": " + product.getName());
         }
-        System.out.println("What product do you want to add to the booking? (Type product id(number)");
+        System.out.print("What product do you want to add to the booking? Please write here: ");
         chosenProductId = userInput.nextInt();
 
         switch (chosenProductId) {
@@ -103,21 +173,24 @@ public class Day {
             default -> System.out.println("Illegal choice. No products added.\nGo to edit booking menu.");
         }
 
-        System.out.println("The booking has now " + products.size()+ " products.");
+        System.out.println("The booking now has " + products.size()+ " products.");
         for (Product product : products) {
             System.out.println(product.getName());
         }
         userInput.nextLine();
-        System.out.println("Add more? y/n");
+        System.out.print("Would you like to add more? y/n: ");
         userChoice = userInput.nextLine();
         if (userChoice.equalsIgnoreCase("y")) {
             addProductsToBooking(booking);
         }
-
     }
 
     public ArrayList<Booking> getBookings() {
         return bookings;
+    }
+
+    public ArrayList<Product> getAvailableProducts() {
+        return availableProducts;
     }
 
     public void showDay() {
@@ -127,7 +200,7 @@ public class Day {
         for (int i = 0; i < bookings.size(); i++) {
             System.out.print((i + 10));
             String customerName=bookings.get(i).getCustomer().getName();
-            if ( customerName== null) { //booking has no customer yet
+            if ( customerName== null || customerName.isEmpty()) { //booking has no customer yet
                 System.out.println(": Available");
             } else {
                 System.out.println(": Booked");

@@ -41,9 +41,7 @@ public class BookingSystem {
     //First method with menu choice to quit or search for date
     private void runFirstMenu() {
         Menu menu = new Menu("You have the following choices: ", new String[] {
-                "1. Search for a date",
-                "2. Quit the program"
-        });
+                "1. Search for a date", "2. Quit the program"});
 
         menu.printMenu();
         System.out.print("Please write your choice here: ");
@@ -80,13 +78,11 @@ public class BookingSystem {
 
     //Method after selected date to either add, delete or edit bookings
     private void runBookingMenu(Day day) {
-        day.displayBookingList();
+        day.showDay();
         Menu menu = new Menu("Now you have the following choices: ", new String[] {
-                "1. Add a booking",
-                "2. Delete a booking",
-                //"3. Edit a booking"
-                "4. Go back to main menu"
+                "1. Add a booking", "2. Delete a booking", "3. Edit a booking", "4. Go back to main menu"
         });
+
         menu.printMenu();
         System.out.print("Please write your choice here: ");
 
@@ -95,6 +91,7 @@ public class BookingSystem {
         switch (userChoice) {
             case 1 -> addBooking(day);
             case 2 -> deleteBooking(day);
+            case 3 -> editBooking(day);
             default -> System.out.println("Returning to main menu");
         }
     }
@@ -102,7 +99,7 @@ public class BookingSystem {
     private int chooseTimeSlot(String text) {
         int givenId = 0;
         System.out.print(text);
-        while(givenId < 1 || givenId >8){ // if timeslot is before 10 or after 17 then keep trying
+        while(givenId < 1 || givenId > 8){ // if timeslot is before 10 or after 17 then keep trying
         int enteredTimeslot = in.nextInt();
         switch (enteredTimeslot) {
             case 10 -> givenId = 1;
@@ -122,7 +119,7 @@ public class BookingSystem {
         int givenId = chooseTimeSlot("\nIn what time slot do you want add a booking? Please write here: ");
         day.addBookingToTimeSlot(givenId);
         System.out.println("Here is the updated day: \n");
-        runBookingMenu(day); //IDK. if this is the best way to return to a menu?
+        runBookingMenu(day);
     }
 
     private void deleteBooking(Day day) {
@@ -133,26 +130,40 @@ public class BookingSystem {
     }
 
     //Menu for editing bookings
-    private void editBooking() {
+    private void editBooking(Day day) {
         Menu menu = new Menu("Would you like to: ", new String[] {
-                "1. Add a product to the given booking",
-                "2. Edit customer name",
-                "3. Edit haircut price",
-                "4. Change payment method"
+                "1. Edit product list", "2. Edit customer name", "3. Edit haircut price", "4. Change payment method"
         });
 
         menu.printMenu();
         System.out.print("Please write your choice here: ");
 
-
         int userChoice = menu.readChoice();
 
         switch (userChoice) {
             case 1 -> closeProgram();
-            case 2 -> closeProgram();
+            case 2 -> editCustomerName(day);
+            case 3 -> editHaircutPrice(day);
+            case 4 -> closeProgram();
             default -> System.out.println("Illegal choice. Please try again: ");
         }
     }
+
+    private void editCustomerName(Day day) {
+        int givenId = chooseTimeSlot("\nIn what time slot do you want to edit the name? \nPlease write here: ");
+        day.editCustomerNameByTimeSlot(givenId);
+        System.out.println("Here is the updated day: \n");
+        runBookingMenu(day);
+    }
+
+    private void editHaircutPrice(Day day) {
+        int givenId = chooseTimeSlot("\nIn what time slot do you want to edit the haircut price? \nPlease write here: ");
+        day.editHaircutPriceByTimeSlot(givenId);
+        day.displayBookingList();
+        System.out.println("Here is the updated day: \n");
+        runBookingMenu(day);
+    }
+
 
     private void addCustomer(String name) {
         Customer newCustomer = new Customer(name);

@@ -50,6 +50,10 @@ public class Booking {
         return customer.getName();
     }
 
+    public void setCustomerName(String name) {
+        customer.setName(name);
+    }
+
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
@@ -79,16 +83,23 @@ public class Booking {
             return productPrice;
     }
 
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
+    }
+
+    public void setBookingTotal(int Total) {
+        this.bookingTotal = Total;
+    }
+
     public double calcTotal() {
         if (!this.getProducts().isEmpty()) {
-            for (Product product: this.getProducts()) {
+            for (Product product : this.getProducts()) {
                 productPrice = productPrice + product.getPrice();
             }
             bookingTotal = haircutPrice + productPrice;
         } else {
             bookingTotal = haircutPrice;
         }
-
         return bookingTotal;
     }
 
