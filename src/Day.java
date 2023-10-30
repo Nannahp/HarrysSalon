@@ -38,7 +38,7 @@ public class Day {
     }
 
     public void addBookingToTimeSlot(int id) {
-        System.out.println("Adding booking to timeslot");
+        //System.out.println("Adding booking to timeslot");
         Scanner userInput = new Scanner(System.in);
 
         if (id >= 1 && id <= 8) {
@@ -56,6 +56,34 @@ public class Day {
         }
     }
 
+    public void deleteBookingByTimeSlot(int id) {
+        if (id >= 1 && id <= 8) {
+            ArrayList<Booking> currentBookings = this.getBookings();
+            Booking deletedBooking = currentBookings.get(id - 1);
+            Customer deletedCustomer = deletedBooking.getCustomer();
+
+            //Check if the given timeslot is booked
+            if (deletedCustomer.getName() != null) {
+                System.out.println("Deleting booking for " + deletedBooking.getDay().toString() + ": " +
+                        deletedBooking.getTimeSlot());
+
+                //Sets the booking to null by setting the customer to null. DisplayBooking
+                // shows correct but showDay crashes
+                //currentBookings.get(id - 1).setCustomer(null);
+                //Cant set booking to null or showDay crashes with nullPointerException
+
+                deletedCustomer.setName(null);
+                currentBookings.get(id - 1).setHaircutPrice(0);
+                System.out.println("The booking has been deleted");
+            } else {
+                System.out.println("No booking has been found at this timeslot\n");
+            }
+
+        } else {
+            System.out.print("This is not a valid time slot. Try again");
+        }
+    }
+
     public ArrayList<Booking> getBookings() {
         return bookings;
     }
@@ -67,7 +95,7 @@ public class Day {
         for (int i = 0; i < bookings.size(); i++) {
             System.out.print((i + 10));
             String customerName=bookings.get(i).getCustomer().getName();
-            if ( customerName== null) { //booking has no customer yet
+            if (customerName== null) { //booking has no customer yet
                 System.out.println(": Available");
             } else {
                 System.out.println(": Booked");

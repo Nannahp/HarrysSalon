@@ -9,12 +9,11 @@ public class BookingSystem {
 
     public static void main(String[] args) {
         new BookingSystem().run();
-
     }
 
     public void run() {
         showIntroMessage();
-        //Insert login code here
+        runLogin();
         while(systemRunning){runFirstMenu();}
     }
 
@@ -27,6 +26,16 @@ public class BookingSystem {
                 "\naccess to all the amazing stuff" +
                 "\nin this bookingsystem :)\n");
         System.out.println("-----------------------------------------------");
+    }
+
+    //Login code where the 'right login' is hardcoded
+    private void runLogin() {
+        Login login = new Login();
+        if (!login.runLogin("hairyharry")) {
+            closeProgram();
+        } else {
+            systemRunning = true;
+        }
     }
 
     //First method with menu choice to quit or search for date
@@ -71,12 +80,12 @@ public class BookingSystem {
 
     //Method after selected date to either add, delete or edit bookings
     private void runBookingMenu(Day day) {
-        day.showDay();
+        day.displayBookingList();
         Menu menu = new Menu("Now you have the following choices: ", new String[] {
                 "1. Add a booking",
                 "2. Delete a booking",
                 //"3. Edit a booking"
-                "3. Go back"
+                "4. Go back to main menu"
         });
         menu.printMenu();
         System.out.print("Please write your choice here: ");
@@ -85,8 +94,8 @@ public class BookingSystem {
 
         switch (userChoice) {
             case 1 -> addBooking(day);
-            case 2 -> closeProgram();
-            default -> System.out.println("Returning to main menu ");
+            case 2 -> deleteBooking(day);
+            default -> System.out.println("Returning to main menu");
         }
     }
 
@@ -113,17 +122,23 @@ public class BookingSystem {
         int givenId = chooseTimeSlot("\nIn what time slot do you want add a booking? Please write here: ");
         day.addBookingToTimeSlot(givenId);
         System.out.println("Here is the updated day: \n");
-        day.showDay();
         runBookingMenu(day); //IDK. if this is the best way to return to a menu?
+    }
 
+    private void deleteBooking(Day day) {
+        int givenId = chooseTimeSlot("\nIn what time slot do you want delete a booking? Please write here: ");
+        day.deleteBookingByTimeSlot(givenId);
+        System.out.println("Here is the updated day: \n");
+        runBookingMenu(day);
     }
 
     //Menu for editing bookings
     private void editBooking() {
-        boolean running = true;
         Menu menu = new Menu("Would you like to: ", new String[] {
                 "1. Add a product to the given booking",
-                "2. Change the payment method"
+                "2. Edit customer name",
+                "3. Edit haircut price",
+                "4. Change payment method"
         });
 
         menu.printMenu();
@@ -133,12 +148,9 @@ public class BookingSystem {
         int userChoice = menu.readChoice();
 
         switch (userChoice) {
-            case 1:
-                closeProgram();
-            case 2:
-                closeProgram();
-            default:
-                System.out.println("Illegal choice. Please try again: ");
+            case 1 -> closeProgram();
+            case 2 -> closeProgram();
+            default -> System.out.println("Illegal choice. Please try again: ");
         }
     }
 
