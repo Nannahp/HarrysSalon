@@ -6,7 +6,7 @@ public class Booking {
     private String timeSlot;
     private Customer customer;
     private double haircutPrice;
-    private double productPrice = 0;
+    private double productPrice;
     private double bookingTotal;
     private Day day;
     private ArrayList<Product> products = new ArrayList<Product>();
@@ -27,7 +27,26 @@ public class Booking {
             case 7 -> this.setTimeSlot("16:00 - 17:00");
             case 8 -> this.setTimeSlot("17:00 - 18:00");
         }
+    }
 
+    //!\\ Only for hardcoded day
+    public Booking (int id, Day day, Customer customer, double haircutPrice, ArrayList<Product> products) {
+        this.id = id;
+        this.day = day;
+        this.customer = customer;
+        this.haircutPrice = haircutPrice;
+        this.products = products;
+
+        switch (id) {
+            case 1 -> this.setTimeSlot("10:00 - 11:00");
+            case 2 -> this.setTimeSlot("11:00 - 12:00");
+            case 3 -> this.setTimeSlot("12:00 - 13:00");
+            case 4 -> this.setTimeSlot("13:00 - 14:00");
+            case 5 -> this.setTimeSlot("14:00 - 15:00");
+            case 6 -> this.setTimeSlot("15:00 - 16:00");
+            case 7 -> this.setTimeSlot("16:00 - 17:00");
+            case 8 -> this.setTimeSlot("17:00 - 18:00");
+        }
     }
 
     public int getId() {
@@ -74,15 +93,20 @@ public class Booking {
         return products;
     }
 
-    public double calcProductPrice(){
-
-            return productPrice;
+    public double getProductPrice(){
+        return productPrice;
     }
 
     public double calcTotal() {
+
+        //reset values;
+        productPrice= 0;
+        haircutPrice = this.getHaircutPrice();
+        bookingTotal = 0;
+
         if (!this.getProducts().isEmpty()) {
             for (Product product: this.getProducts()) {
-                productPrice = productPrice + product.getPrice();
+                productPrice += product.getPrice();
             }
             bookingTotal = haircutPrice + productPrice;
         } else {
