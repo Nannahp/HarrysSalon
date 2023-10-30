@@ -90,33 +90,43 @@ public class BookingSystem {
         }
     }
 
-    private int chooseTimeSlot(String text) {
-        int givenId = 0;
-        System.out.print(text);
-        while(givenId < 1 || givenId >8){ // if timeslot is before 10 or after 17 then keep trying
-        int enteredTimeslot = in.nextInt();
-        switch (enteredTimeslot) {
-            case 10 -> givenId = 1;
-            case 11 -> givenId = 2;
-            case 12 -> givenId = 3;
-            case 13 -> givenId = 4;
-            case 14 -> givenId = 5;
-            case 15 -> givenId = 6;
-            case 16 -> givenId = 7;
-            case 17 -> givenId = 8;
+    private int chooseTimeSlot(int chosenTimeslot) {
+        int timeslotId = 0;
+        while(timeslotId < 1 || timeslotId >8){ // if timeslot is before 10 or after 17 then keep trying
+        switch (chosenTimeslot) {
+            case 10 -> timeslotId = 1;
+            case 11 -> timeslotId = 2;
+            case 12 -> timeslotId = 3;
+            case 13 -> timeslotId = 4;
+            case 14 -> timeslotId = 5;
+            case 15 -> timeslotId = 6;
+            case 16 -> timeslotId = 7;
+            case 17 -> timeslotId = 8;
             default -> System.out.println("This is not a valid time slot. Please enter another time:");
         }}
-        return givenId;
+        return timeslotId;
     }
 
     private void addBooking(Day day) {
-        int givenId = chooseTimeSlot("\nIn what time slot do you want add a booking? Please write here: ");
-        day.addBookingToTimeSlot(givenId);
+        int chosenTimeslot;
+        int timeslotId;
+        String userChoice;
+
+        System.out.println("\nIn what time slot do you want add a booking? Please write here: ");
+        chosenTimeslot = in.nextInt();
+
+        timeslotId = chooseTimeSlot(chosenTimeslot);
+        day.addBookingToTimeSlot(timeslotId);
+
+
         System.out.println("Here is the updated day: \n");
         day.showDay();
-        runBookingMenu(day); //IDK. if this is the best way to return to a menu?
 
+        //Det er den som displayer Day to gange, så lad os bare slet den tror jeg
+        //runBookingMenu(day); //IDK. if this is the best way to return to a menu?
     }
+
+
 
     //Menu for editing bookings
     private void editBooking() {
@@ -146,6 +156,7 @@ public class BookingSystem {
         Customer newCustomer = new Customer(name);
         customers.add(newCustomer);
     }
+
     private void closeProgram(){ // code was used a lot so made a method.
         System.out.println("Goodbye for now!");
         systemRunning = false;
