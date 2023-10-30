@@ -1,9 +1,15 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Booking {
     private int id;
     private String timeSlot;
     private Customer customer;
     private double haircutPrice;
+    private double productPrice = 0;
+    private double bookingTotal;
     private Day day;
+    private ArrayList<Product> products = new ArrayList<Product>();
 
     public Booking (int id, Day day) {
         this.id = id;
@@ -24,35 +30,6 @@ public class Booking {
 
     }
 
-    // TODO:
-    // TEST Booking
-
-
-    // tror ikke at der er brug for den, fordi vi laver instancer af booking når vi laver
-    // en arraylist<Booking> i Day, derfor skal dage kun oprettes med et id, som vil lave en
-    // setTimeslot i forhold til id'et, og senere når Harry skal oprette en Booking er han jo
-    // på en day som allerede har den array med bookings allerede initialiseret med en Day og en id,
-    // derfor skal man kun setCustomer, setHaircutPrice
-
- /*   public Booking (int id, Customer customer, double haircutPrice, Day day) {
-        this.id = id;
-
-        switch (id) {
-            case 1 -> this.setTimeSlot("10:00 - 11:00");
-            case 2 -> this.setTimeSlot("11:00 - 12:00");
-            case 3 -> this.setTimeSlot("12:00 - 13:00");
-            case 4 -> this.setTimeSlot("13:00 - 14:00");
-            case 5 -> this.setTimeSlot("14:00 - 15:00");
-            case 6 -> this.setTimeSlot("15:00 - 16:00");
-            case 7 -> this.setTimeSlot("16:00 - 17:00");
-            case 8 -> this.setTimeSlot("17:00 - 18:00");
-        }
-
-        this.customer = customer;
-        this.haircutPrice = haircutPrice;
-        this.day = day;
-    }*/
-
     public int getId() {
         return id;
     }
@@ -67,6 +44,10 @@ public class Booking {
 
     public Customer getCustomer() {
         return customer;
+    }
+
+    public String getCustomerName() {
+        return customer.getName();
     }
 
     public void setCustomer(Customer customer) {
@@ -89,13 +70,56 @@ public class Booking {
         this.day = day;
     }
 
-    @Override
-    public String toString() {
-        if (this.getCustomer() == null || this.getHaircutPrice() == 0) {
-            return "Booking " + this.getTimeSlot() + "\nCustomer name: " + "No customer yet" + "\nHaircut Price: " + "No price yet";
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
+
+    public double calcProductPrice(){
+
+            return productPrice;
+    }
+
+    public double calcTotal() {
+        if (!this.getProducts().isEmpty()) {
+            for (Product product: this.getProducts()) {
+                productPrice = productPrice + product.getPrice();
+            }
+            bookingTotal = haircutPrice + productPrice;
         } else {
-            return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-";
+            bookingTotal = haircutPrice;
         }
 
+        return bookingTotal;
+    }
+
+
+    @Override
+    public String toString() {
+
+        // String builder to build a string of looped products because you can't loop in a return statement :)
+        StringBuilder sb = new StringBuilder("\nItem/s bought:\n");
+
+        for (int i = 0; i < this.getProducts().size(); i++) {
+            sb.append(this.getProducts().get(i).getName()).append(": ").append(this.getProducts().get(i).getPrice()).append(",-\n");
+        }
+        String str = sb.toString();
+
+        //Nested if
+
+        //If booking ISN'T empty (customer NOT null and/or price NOT 0 )
+        if (this.getCustomer() != null || this.getHaircutPrice() != 0) {
+            // then check if bookings products arrayList is empty
+            if (!this.getProducts().isEmpty()) {
+                //IF NOT display this
+                return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-" + str + "Booking total: " + this.calcTotal() + ",-\n";
+            } else {
+                // if YES display this
+                return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-" + "\nBooking total: " + this.calcTotal() + ",-\n";
+            }
+            //If booking IS empty (customer null and/or price = 0 )
+        } else {
+            // then display this
+            return "Booking " + this.getTimeSlot() + "\nCustomer name: " + "No customer yet" + "\nHaircut Price: " + "No price yet";
+        }
     }
 }
