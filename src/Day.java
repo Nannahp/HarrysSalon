@@ -40,17 +40,31 @@ public class Day {
     public void addBookingToTimeSlot(int id) {
         System.out.println("Adding booking to timeslot");
         Scanner userInput = new Scanner(System.in);
+        String customerName;
+        double haircutPrice;
 
         if (id >= 1 && id <= 8) {
             ArrayList<Booking> currentBookings = this.getBookings();
 
             System.out.println("Booking " + currentBookings.get(id - 1).getDay().toString() + ": " + currentBookings.get(id - 1).getTimeSlot());
             System.out.print("What is the name of the customer: ");
-            currentBookings.get(id - 1).setCustomer(new Customer(userInput.nextLine()));
-            //System.out.println(currentBookings.get(id - 1).getCustomer().getName());
+            customerName = userInput.nextLine();
+            currentBookings.get(id - 1).getCustomer().setName(customerName);
+
+            //just for test
+            System.out.println(currentBookings.get(id -1).getCustomerName());
+
+
             System.out.print("What is the price of the haircut: ");
-            currentBookings.get(id - 1).setHaircutPrice((double) userInput.nextInt());
+            haircutPrice = userInput.nextInt();
+            currentBookings.get(id - 1).setHaircutPrice(haircutPrice);
+
+            //just for test
+            System.out.println(currentBookings.get(id - 1).getHaircutPrice());
+
             System.out.println("Thank you for adding a booking.");
+
+
         } else {
             System.out.println("This is not a valid time slot. Try again.");
         }
