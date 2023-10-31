@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BookingSystem {
-    private ArrayList<Customer> customers = new ArrayList<>();
+    //private ArrayList<Customer> customers = new ArrayList<>();
     private Scanner in = new Scanner(System.in);
     Calender calender = new Calender("Harry's calender");
     boolean systemRunning = true;
@@ -71,7 +71,7 @@ public class BookingSystem {
         System.out.println("The hardcoded date to check is the 03-03-2020");
         System.out.println("But feel free to also check other dates out too, they are just boring as they");
         System.out.println("are empty by default.");
-        System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---");
+        System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---\n");
     }
 
     //_________________________________________________________________________________________
@@ -196,16 +196,6 @@ public class BookingSystem {
             });
             menu.printMenu();
             System.out.print("Please write your choice here: ");
-        day.showDay();
-        Menu menu = new Menu("Now you have the following choices: ", new String[] {
-                "1. Add a booking",
-                "2. Delete a booking",
-                //"3. Edit a booking"
-                "3. Go back to main menu"
-        });
-        menu.printMenu();
-        System.out.print("Please write your choice here: ");
-
             int userChoice = menu.readChoice();
 
         switch (userChoice) {
@@ -365,10 +355,10 @@ public class BookingSystem {
         runBookingMenu(day);
     }
 
-    private void addCustomer(String name) {
+    /*private void addCustomer(String name) {
         Customer newCustomer = new Customer(name);
         customers.add(newCustomer);
-    }
+    }*/
 
     private void closeProgram(){ // code was used a lot so made a method.
         System.out.println("Goodbye for now!");

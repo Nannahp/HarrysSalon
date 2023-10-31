@@ -159,9 +159,9 @@ public class Day {
         }
     }
 
-    public void setBookings(ArrayList<Booking> bookings) {
+    /*public void setBookings(ArrayList<Booking> bookings) {
         this.bookings = bookings;
-    }
+    }*/
 
     public void deleteBookingByTimeSlot(int id) {
         if (id >= 1 && id <= 8) {
