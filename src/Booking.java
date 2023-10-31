@@ -27,8 +27,28 @@ public class Booking {
             case 7 -> this.setTimeSlot("16:00 - 17:00");
             case 8 -> this.setTimeSlot("17:00 - 18:00");
         }
-
     }
+
+    //!\\ Only for hardcoded day
+    public Booking (int id, Day day, Customer customer, double haircutPrice, ArrayList<Product> products) {
+        this.id = id;
+        this.day = day;
+        this.customer = customer;
+        this.haircutPrice = haircutPrice;
+        this.products = products;
+
+        switch (id) {
+            case 1 -> this.setTimeSlot("10:00 - 11:00");
+            case 2 -> this.setTimeSlot("11:00 - 12:00");
+            case 3 -> this.setTimeSlot("12:00 - 13:00");
+            case 4 -> this.setTimeSlot("13:00 - 14:00");
+            case 5 -> this.setTimeSlot("14:00 - 15:00");
+            case 6 -> this.setTimeSlot("15:00 - 16:00");
+            case 7 -> this.setTimeSlot("16:00 - 17:00");
+            case 8 -> this.setTimeSlot("17:00 - 18:00");
+        }
+    }
+
 
     public int getId() {
         return id;

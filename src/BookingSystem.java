@@ -12,15 +12,13 @@ public class BookingSystem {
 
     public static void main(String[] args) {
         new BookingSystem().run();
-
     }
 
     public void run() {
-
         // adding hardcoded day for accountant example - ny bookings hver gang
-        addHardcodedDay();
         //____________________________________________
         showIntroMessage();
+        runLogin();
         //Insert login code here
         while(systemRunning){runFirstMenu();}
     }
@@ -60,7 +58,6 @@ public class BookingSystem {
         // Forklaring på hvilket hardcoded dato der er at tjekke hvis man vil kunne se noget spændende
         // ellers er der nemlig kun tomme days med tomme bookings fordi vi ikke kan add en booking for
         // en dag før dagen dag.
-        System.out.println();
         System.out.println("Please note that until we have the ability to keep dates in file,");
         System.out.println("with the methods used and choices made AND/OR the fact that it would require");
         System.out.println("a few days to do this authentically we are not really able to see");
@@ -91,6 +88,16 @@ public class BookingSystem {
         System.out.println("-----------------------------------------------");
     }
 
+    //Login code where the 'right login' is hardcoded
+    private void runLogin() {
+        Login login = new Login();
+        if (!login.runLogin("hairyharry")) {
+            closeProgram();
+        } else {
+            systemRunning = true;
+        }
+    }
+
     //First method with menu choice to quit or search for date
     private void runFirstMenu() {
         Menu menu = new Menu("You have the following choices: ", new String[] {
@@ -119,7 +126,8 @@ public class BookingSystem {
         isBeforeToday = isDateBeforeToday(day);
         if (isBeforeToday) {
             // Accountant menu
-            System.out.println("Date is before today yay");
+            System.out.println("The date you have entered is before today!");
+            addHardcodedDay();
             runAccountantMenu(day);
         } else {
             // Employee - booking menu
@@ -156,7 +164,7 @@ public class BookingSystem {
                 "1. Add a booking",
                 "2. Delete a booking",
                 //"3. Edit a booking"
-                "3. Go back"
+                "3. Go back to main menu"
         });
         menu.printMenu();
         System.out.print("Please write your choice here: ");
@@ -165,7 +173,7 @@ public class BookingSystem {
 
         switch (userChoice) {
             case 1 -> addBooking(day);
-            case 2 -> closeProgram();
+            case 2 -> deleteBooking(day);
             default -> System.out.println("Returning to main menu ");
         }
     }
@@ -175,7 +183,7 @@ public class BookingSystem {
         day.showDay();
         Menu menu = new Menu("Now you have the following choices: ", new String[] {
                 "1. See booking details",
-                "2. Go back"
+                "2. Go back to main menu"
         });
         menu.printMenu();
         System.out.print("Please write your choice here: ");
@@ -184,14 +192,13 @@ public class BookingSystem {
 
         switch (userChoice) {
             case 1 -> seeBookingDetail(day);
-            case 2 -> closeProgram();
             default -> System.out.println("Returning to main menu ");
         }
     }
 
     private int chooseTimeSlot(int chosenTimeslot) {
         int timeslotId = 0;
-        while(timeslotId < 1 || timeslotId >8){ // if timeslot is before 10 or after 17 then keep trying
+        while(timeslotId < 1 || timeslotId>8){ // if timeslot is before 10 or after 17 then keep trying
         switch (chosenTimeslot) {
             case 10 -> timeslotId = 1;
             case 11 -> timeslotId = 2;
@@ -211,17 +218,35 @@ public class BookingSystem {
         int timeslotId;
         String userChoice;
 
-        System.out.println("\nIn what time slot do you want add a booking? Please write here: ");
+        System.out.print("\nIn what time slot do you want to add a booking? Please write here: ");
         chosenTimeslot = in.nextInt();
+        in.nextLine(); //Scanner bug
 
         timeslotId = chooseTimeSlot(chosenTimeslot);
         day.addBookingToTimeSlot(timeslotId);
-
 
         System.out.println("Here is the updated day: \n");
         day.showDay();
 
         //Det er den som displayer Day to gange, så lad os bare slet den tror jeg
+        //runBookingMenu(day); //IDK. if this is the best way to return to a menu?
+    }
+
+    private void deleteBooking(Day day) {
+        int chosenTimeslot;
+        int timeslotId;
+        String userChoice;
+
+        System.out.print("\nIn what time slot do you want to delete a booking? Please write here: ");
+        chosenTimeslot = in.nextInt();
+        in.nextLine(); //Scanner bug
+
+        timeslotId = chooseTimeSlot(chosenTimeslot);
+        day.deleteBookingByTimeSlot(timeslotId);
+
+        System.out.println("Here is the updated day: \n");
+        day.showDay();
+
         //runBookingMenu(day); //IDK. if this is the best way to return to a menu?
     }
 
@@ -231,7 +256,7 @@ public class BookingSystem {
         int timeSlotId;
         String userChoice;
 
-        System.out.println("\nWhat timeslot is the booking you want to see in details?");
+        System.out.print("\nIn what time slot do you want to see the booking details? Please write here: ");
 
         chosenTimeSlot = in.nextInt();
         timeSlotId = chooseTimeSlot(chosenTimeSlot);
@@ -241,27 +266,57 @@ public class BookingSystem {
 
 
     //Menu for editing bookings
-    private void editBooking() {
-        boolean running = true;
+    private void editBooking(Day day) {
         Menu menu = new Menu("Would you like to: ", new String[] {
-                "1. Add a product to the given booking",
-                "2. Change the payment method"
+                "1. Edit product list",
+                "2. Edit customer name",
+                "3. Edit haircut price",
+                //"4. Change payment method"
         });
 
         menu.printMenu();
         System.out.print("Please write your choice here: ");
 
-
         int userChoice = menu.readChoice();
 
         switch (userChoice) {
-            case 1:
-                closeProgram();
-            case 2:
-                closeProgram();
-            default:
-                System.out.println("Illegal choice. Please try again: ");
+            case 1 -> closeProgram();
+            case 2 -> editCustomerName(day);
+            case 3 -> editHaircutPrice(day);
+            //case 4 -> closeProgram();
+            default -> System.out.println("Illegal choice. Please try again: ");
         }
+    }
+
+    private void editCustomerName(Day day) {
+        int chosenTimeSlot;
+        int timeSlotId;
+
+        System.out.print("\nIn what time slot do you want to edit the name? \nPlease write here: ");
+
+        chosenTimeSlot = in.nextInt();
+        in.nextLine(); //Scanner bug
+        timeSlotId = chooseTimeSlot(chosenTimeSlot);
+
+        day.editCustomerNameByTimeSlot(timeSlotId);
+        System.out.println("Here is the updated day: \n");
+        runBookingMenu(day);
+    }
+
+    private void editHaircutPrice(Day day) {
+        int chosenTimeSlot;
+        int timeSlotId;
+
+        System.out.print("\nIn what time slot do you want to see the haircut price? Please write here: ");
+
+        chosenTimeSlot = in.nextInt();
+        in.nextLine(); //Scanner bug
+        timeSlotId = chooseTimeSlot(chosenTimeSlot);
+
+        day.editHaircutPriceByTimeSlot(timeSlotId);
+        day.displayBookingList();
+        System.out.println("Here is the updated day: \n");
+        runBookingMenu(day);
     }
 
     private void addCustomer(String name) {
