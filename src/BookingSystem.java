@@ -1,11 +1,9 @@
 import java.time.LocalDate;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BookingSystem {
-    //private ArrayList<Customer> customers = new ArrayList<>();
+    private ArrayList<Customer> customers = new ArrayList<>();
     private Scanner in = new Scanner(System.in);
     Calender calender = new Calender("Harry's calender");
     boolean systemRunning = true;
@@ -224,10 +222,11 @@ public class BookingSystem {
         }
     }
 
-    private int chooseTimeSlot(int chosenTimeslot) {
+    private int chooseTimeSlot() {
         int timeslotId = 0;
-        while(timeslotId < 1 || timeslotId>8){ // if timeslot is before 10 or after 17 then keep trying
-        switch (chosenTimeslot) {
+        while(timeslotId < 1 || timeslotId >8){ // if timeslot is before 10 or after 17 then keep trying
+         int chosenTimeslot = in.nextInt();
+         switch (chosenTimeslot) {
             case 10 -> timeslotId = 1;
             case 11 -> timeslotId = 2;
             case 12 -> timeslotId = 3;
@@ -242,22 +241,20 @@ public class BookingSystem {
     }
 
     private void addBooking(Day day) {
-        int chosenTimeslot;
+
         int timeslotId;
-        String userChoice;
 
-        System.out.print("\nIn what time slot do you want to add a booking? Please write here: ");
-        chosenTimeslot = in.nextInt();
-        in.nextLine(); //Scanner bug
-
-        timeslotId = chooseTimeSlot(chosenTimeslot);
+        System.out.println("\nIn what time slot do you want add a booking? Please write here: ");
+        //input er lagt tilbage i chooseTimeslot, så at while-loopet kører. Hvis det kan lade sig gøre på anden måde,
+        //then by all means ryk det tilbage igen :)
+        timeslotId = chooseTimeSlot();
         day.addBookingToTimeSlot(timeslotId);
 
         System.out.println("Here is the updated day: \n");
         day.showDay();
 
         //Det er den som displayer Day to gange, så lad os bare slet den tror jeg
-        //runBookingMenu(day); //IDK. if this is the best way to return to a menu?
+        //kunne være fedt hvis vi fandt en anden metode til at blive i samme menu
     }
 
     private void deleteBooking(Day day) {
@@ -280,14 +277,10 @@ public class BookingSystem {
 
 
     private void seeBookingDetail(Day day) {
-        int chosenTimeSlot;
         int timeSlotId;
-        String userChoice;
 
-        System.out.print("\nIn what time slot do you want to see the booking details? Please write here: ");
-
-        chosenTimeSlot = in.nextInt();
-        timeSlotId = chooseTimeSlot(chosenTimeSlot);
+        System.out.println("\nWhat timeslot is the booking you want to see in details?");
+        timeSlotId = chooseTimeSlot();
 
         System.out.println(day.getBookings().get(timeSlotId-1).toString());
     }

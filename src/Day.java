@@ -13,6 +13,7 @@ public class Day {
     private boolean weekend;
 
     public Day(int day, int month, int year) {
+        if(year > 2000 && year < 2030){
         try {
             this.date = LocalDate.of(year, month, day);
             initializeBookings();
@@ -21,7 +22,9 @@ public class Day {
             this.date = null;
             System.out.println("Date does not exist. Are you sure you have entered the right date?");
 
-        }
+        }}
+        else {this.date =null;
+            System.out.println("Please only enter years between 2000 - 2030");}
     }
 
     private void initializeBookings() {
@@ -58,14 +61,14 @@ public class Day {
     public String[] buildClosedMessage() {                   //booking listen er 0 for lukkede dage, derfor kan den ikke bruges
         String[] closedMessage = new String[8];              //til at definerer størrelsen på beskeden. Kan give fejl i fremtiden,
         for (int i = 0; i < closedMessage.length; i++) {     //hvis størrelsen på listen ændres, fx med flere tider.
-            closedMessage[i] = i == 3 ? "   CLOSED   " : "            ";
+            closedMessage[i] = i == 3 ? "      CLOSED     " : "               ";
         }
         return closedMessage;
     }
     public String[] buildHolidayMessage() {
         String[] holidayMessage = new String[8];
         for (int i = 0; i < holidayMessage.length; i++) {
-            holidayMessage[i] = (i == 3) ? "   CLOSED   " : ((i == 4) ? " FOR HOLIDAY" : "            ");
+            holidayMessage[i] = (i == 3) ? "     CLOSED     " : ((i == 4) ? " FOR HOLIDAY  " : "               ");
         }
         return holidayMessage;
     }
