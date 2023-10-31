@@ -43,46 +43,54 @@ public class Calender {
         } else return null; //
     }
 
-    public void showCalender(Day day){
+    public ArrayList<Day> buildCalender(Day day){
         LocalDate startDate = day.getDate();
         LocalDate endDate = day.getDate().plusDays(4);
-        ArrayList<Day> days = new ArrayList<>();
+        ArrayList<Day> daysInSearch = new ArrayList<>();
         //Build a list of days
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            days.add(searchForDate(date.getDayOfMonth(), date.getMonthValue(), date.getYear()));
+            daysInSearch.add(searchForDate(date.getDayOfMonth(), date.getMonthValue(), date.getYear()));
         }
-        System.out.println("------------------------------------------------------------------------------------");
-
-        //Object[] dayOfWeekArray = days.stream().map(d->d.getDate().getDayOfWeek()).toArray();
-        //Object[] toStringArray = days.stream().map(Day::toString).toArray();
-        //Print the day of the week
-
-        for (Day d : days) {
-            String dayOfWeek = d.getDate().getDayOfWeek().toString();
-            int spacesToAdd = 15 - dayOfWeek.length();
-
-            // Pad with spaces to achieve consistent spacing
-            String paddedDayOfWeek =" ".repeat(spacesToAdd) +  dayOfWeek ;
-            System.out.print(paddedDayOfWeek);
-        }
-        System.out.println();
-
-        for(Day d : days) {//Print the date as a String
-            System.out.printf("%15s", d.toString());
-        }
-        System.out.println();
-        // System.out.printf("   %s         %7s           %7s         %7s        %7s\n", days.get(0).getDate().getDayOfWeek(),days.get(1).getDate().getDayOfWeek(),days.get(2).getDate().getDayOfWeek(),days.get(3).getDate().getDayOfWeek(),days.get(4).getDate().getDayOfWeek());
-        //System.out.printf("   %s        %7s         %7s        %7s         %7s\n", days.get(0).toString(),days.get(1).toString(),days.get(2).toString(),days.get(3).toString(), days.get(4).toString());
-        System.out.println("------------------------------------------------------------------------------------");
-        //Print the day calendar elements with consistent spacing
-        for (int i = 0; i < 8; i++) {
-            for(Day d: days){
-                System.out.printf("%17s", d.buildDayCalender()[i]);//System.out.println(days.get(0).buildDayCalender()[i] +"  " + days.get(1).buildDayCalender()[i] +"  "+ days.get(2).buildDayCalender()[i] + "  " +days.get(3).buildDayCalender()[i] + "  " +  days.get(4).buildDayCalender()[i]);
-            }
-            System.out.println();
-        }
-        System.out.println("------------------------------------------------------------------------------------");
+        return daysInSearch;
     }
+    public void showCalender(Day day){
+        ArrayList<Day> daysInSearch = buildCalender(day);
+        int dashCount = 87;
+
+        System.out.println("-".repeat(dashCount));
+        showWeekdays(daysInSearch);
+        System.out.println();
+
+        showDate(daysInSearch);
+        System.out.println();
+        System.out.println("-".repeat(dashCount));
+        showContents(daysInSearch);
+        System.out.println("-".repeat(dashCount));
+    }
+
+    public void showWeekdays(ArrayList<Day> daysInList){
+        for (Day d : daysInList) {
+            String dayOfWeek = d.getDate().getDayOfWeek().toString();
+            int spacesToAdd = 11-dayOfWeek.length();
+            System.out.print( "      " + dayOfWeek + " ".repeat(spacesToAdd) );
+        }
+    }
+public void showDate(ArrayList<Day> daysInList) {
+    for (Day d : daysInList) {//Print the date as a String
+        String date  = d.getDate().toString();
+        int spacesToAdd = 13 - date.length();
+            System.out.print( "      " + d.toString() + " ".repeat(spacesToAdd));
+        }
+}
+public void showContents(ArrayList<Day>daysInList){
+    for (int i = 0; i < 8; i++) {
+        for(Day d: daysInList){
+            System.out.printf("%17s", d.buildDayCalender()[i]);
+        }
+        System.out.println();
+    }
+}
+
     public void showCalenderList(){
         for (Day day:days) {
             System.out.println(day.toString());
