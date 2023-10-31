@@ -1,4 +1,6 @@
 import java.time.LocalDate;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -102,7 +104,8 @@ public class BookingSystem {
     private void runFirstMenu() {
         Menu menu = new Menu("You have the following choices: ", new String[] {
                 "1. Search for a date",
-                "2. Quit the program"
+                "2. Register holidays",
+                "3. Quit the program"
         });
 
         menu.printMenu();
@@ -112,7 +115,8 @@ public class BookingSystem {
 
         switch (userChoice) {
             case 1 -> sendToCorrectMenu(enterDate());
-            case 2 -> closeProgram();
+            case 2 -> registerHolidays();
+            case 3 -> closeProgram();
             default -> System.out.println("Illegal choice. Please try again: "); //enhanced switch, to avoid break
         }
     }
@@ -123,6 +127,10 @@ public class BookingSystem {
     }
 
     private void sendToCorrectMenu(Day day) {
+        if (day.getWeekend()|| day.getHoliday()){
+            runClosedMenu(day); //Hvis det er en lukket dag skal den kun kunne gå tilbage
+        }
+        else{
         isBeforeToday = isDateBeforeToday(day);
         if (isBeforeToday) {
             // Accountant menu
@@ -134,6 +142,8 @@ public class BookingSystem {
             runBookingMenu(day);
         }
     }
+    }
+
 
 
     private Day enterDate() {
@@ -157,8 +167,35 @@ public class BookingSystem {
         return calender.searchForDate(day, month, year);
     }
 
+
+    private void runClosedMenu(Day day){
+        calender.showCalender(day);
+        System.out.print("\nYou are currently on "+ day.toString());
+        Menu menu = new Menu("Current date is closed, please go back and choose another date:\n", new String[]{
+                "1. Go back"
+        });
+        menu.printMenu();
+        System.out.print("Please write your choice here: ");
+
+        int userChoice = menu.readChoice();
+
+        switch (userChoice) {
+            default -> System.out.println("Returning to main menu ");
+        }
+    }
+
     //Method after selected date to either add, delete or edit bookings
     private void runBookingMenu(Day day) {
+        calender.showCalender(day);
+        System.out.print("\nYou are currently on "+ day.toString());
+            Menu menu = new Menu("Now you have the following choices: ", new String[]{
+                    "1. Add a booking",
+                    "2. Delete a booking",
+                    //"3. Edit a booking"
+                    "3. Go back"
+            });
+            menu.printMenu();
+            System.out.print("Please write your choice here: ");
         day.showDay();
         Menu menu = new Menu("Now you have the following choices: ", new String[] {
                 "1. Add a booking",
@@ -169,7 +206,7 @@ public class BookingSystem {
         menu.printMenu();
         System.out.print("Please write your choice here: ");
 
-        int userChoice = menu.readChoice();
+            int userChoice = menu.readChoice();
 
         switch (userChoice) {
             case 1 -> addBooking(day);
@@ -192,6 +229,7 @@ public class BookingSystem {
 
         switch (userChoice) {
             case 1 -> seeBookingDetail(day);
+            //case 2 -> closeProgram(); skal vel ikke lukke programmet, skal vel bare tilbage?
             default -> System.out.println("Returning to main menu ");
         }
     }
@@ -286,6 +324,14 @@ public class BookingSystem {
             //case 4 -> closeProgram();
             default -> System.out.println("Illegal choice. Please try again: ");
         }
+    }
+    private void registerHolidays(){
+        System.out.println("Please enter the start date for the closed period:");
+        Day startDate = enterDate();
+        System.out.println("Please enter the end date for the closed period");
+        Day endDate = enterDate();
+        calender.registerHolidays(startDate,endDate);
+        System.out.println("Closed period registered: " + startDate.toString() + " - " +endDate.toString());
     }
 
     private void editCustomerName(Day day) {
