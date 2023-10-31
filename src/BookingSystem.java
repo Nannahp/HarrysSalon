@@ -42,12 +42,10 @@ public class BookingSystem {
     private void runFirstMenu() {
         Menu menu = new Menu("You have the following choices: ", new String[] {
                 "1. Search for a date", "2. Quit the program"});
-
         menu.printMenu();
+
         System.out.print("Please write your choice here: ");
-
         int userChoice = menu.readChoice();
-
         switch (userChoice) {
             case 1 -> runBookingMenu(enterDate());
             case 2 -> closeProgram();
@@ -82,12 +80,10 @@ public class BookingSystem {
         Menu menu = new Menu("Now you have the following choices: ", new String[] {
                 "1. Add a booking", "2. Delete a booking", "3. Edit a booking", "4. Go back to main menu"
         });
-
         menu.printMenu();
+
         System.out.print("Please write your choice here: ");
-
         int userChoice = menu.readChoice();
-
         switch (userChoice) {
             case 1 -> addBooking(day);
             case 2 -> deleteBooking(day);
@@ -134,12 +130,10 @@ public class BookingSystem {
         Menu menu = new Menu("Would you like to: ", new String[] {
                 "1. Edit product list", "2. Edit customer name", "3. Edit haircut price", "4. Change payment method"
         });
-
         menu.printMenu();
+
         System.out.print("Please write your choice here: ");
-
         int userChoice = menu.readChoice();
-
         switch (userChoice) {
             case 1 -> closeProgram();
             case 2 -> editCustomerName(day);
