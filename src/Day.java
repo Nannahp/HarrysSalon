@@ -120,6 +120,11 @@ public class Day {
         return bookings;
     }
 
+    public void setBookings(ArrayList<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+
     public void showDay() {
         if (this.date !=null){      // makes sure that it doesn't crash if the date is impossible
         System.out.println(date.getDayOfWeek().toString());

@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public  class ProductBuilder {
-    public ArrayList<Product> getProducts() {
+    public static ArrayList<Product> getProducts() {
         ArrayList<Product> products = new ArrayList<>();
 
 

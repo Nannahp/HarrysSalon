@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Random;
 
 public class Calender {
     String calenderName;
@@ -8,18 +9,11 @@ public class Calender {
     public Calender(String name){
         this.calenderName = name;
     }
+
+
     public void addDay(Day day) {
-        int index = 0;
-        if (index == days.size()) {
-            days.add(index,day);
-        }
-        else do{
-            days.add(index, day);
-            index++;}
-        while (index < days.size() && day.getDate().isAfter(days.get(index).getDate()));
-        }
-
-
+        days.add(day);
+    }
 
     public Day searchForDate(int day, int month, int year) {
         Day dateSearchedFor = new Day(day, month, year);
