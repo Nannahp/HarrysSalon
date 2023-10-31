@@ -1,4 +1,5 @@
 import java.time.DateTimeException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -8,11 +9,14 @@ public class Day {
     private LocalDate date;
     private ArrayList<Booking> bookings = new ArrayList<Booking>(8);
     private ArrayList<Product> availableProducts = new ProductBuilder().getProducts();
+    private boolean holiday;
+    private boolean weekend;
 
     public Day(int day, int month, int year) {
         try {
             this.date = LocalDate.of(year, month, day);
             initializeBookings();
+            registerClosedDay(); // if it's a weekend then it closes the bookings
         } catch (DateTimeException e) {
             this.date = null;
             System.out.println("Date does not exist. Are you sure you have entered the right date?");
@@ -36,6 +40,41 @@ public class Day {
 
     public LocalDate getDate() {
         return date;
+    }
+    public void setHoliday(boolean choice){ //find a better name
+        this.holiday = choice;
+    }
+    public boolean getHoliday(){
+        return holiday;
+    }
+
+    public boolean getWeekend(){
+        return weekend;
+    }
+
+    public void closeDay(){
+        this.bookings.clear();
+    }
+    public String[] buildClosedMessage() {                   //booking listen er 0 for lukkede dage, derfor kan den ikke bruges
+        String[] closedMessage = new String[8];              //til at definerer størrelsen på beskeden. Kan give fejl i fremtiden,
+        for (int i = 0; i < closedMessage.length; i++) {     //hvis størrelsen på listen ændres, fx med flere tider.
+            closedMessage[i] = i == 3 ? "   CLOSED   " : "            ";
+        }
+        return closedMessage;
+    }
+    public String[] buildHolidayMessage() {
+        String[] holidayMessage = new String[8];
+        for (int i = 0; i < holidayMessage.length; i++) {
+            holidayMessage[i] = (i == 3) ? "   CLOSED   " : ((i == 4) ? " FOR HOLIDAY" : "            ");
+        }
+        return holidayMessage;
+    }
+
+    public void registerClosedDay() {
+        if (date.getDayOfWeek() == DayOfWeek.SUNDAY || date.getDayOfWeek() == DayOfWeek.SATURDAY) {
+            closeDay();
+            weekend = true;
+        }
     }
 
     public void addBookingToTimeSlot(int timeslotId) {
@@ -90,7 +129,7 @@ public class Day {
         for (Product product : availableProducts) {
             System.out.println(product.getId() + ": " + product.getName());
         }
-        System.out.println("What product do you want to add to the booking? (Type product id(number)");
+        System.out.println("What product do you want to add to the booking? (Type product id(number))");
         chosenProductId = userInput.nextInt();
 
         switch (chosenProductId) {
@@ -124,22 +163,43 @@ public class Day {
         this.bookings = bookings;
     }
 
+    public String[] buildOpenDayMessage(){
+        String[] dayCalender = new String[bookings.size()];
 
+        for (int i = 0; i < bookings.size(); i++) {
+            Booking booking = bookings.get(i);
+            String customerName=booking.getCustomer().getName();
+
+            if ( customerName== null) { //booking has no customer yet
+                dayCalender[i] = ( i+10 + ": Available  ");
+            } else {
+                dayCalender[i] = (i + 10 +": Booked     ");
+            }
+        }
+        return dayCalender;
+    }
+
+    public String[] buildDayCalender() {
+        if (this.weekend) {
+            return buildClosedMessage();
+        } else if (this.holiday) {
+            return buildHolidayMessage();
+        } else return buildOpenDayMessage();
+    }
+
+    //Had to make a new method to show the 4 days together.
     public void showDay() {
         if (this.date !=null){      // makes sure that it doesn't crash if the date is impossible
-        System.out.println(date.getDayOfWeek().toString());
-        System.out.println(this.toString());
-        for (int i = 0; i < bookings.size(); i++) {
-            System.out.print((i + 10));
-            String customerName=bookings.get(i).getCustomer().getName();
-            if ( customerName== null) { //booking has no customer yet
-                System.out.println(": Available");
-            } else {
-                System.out.println(": Booked");
-            }
-        }}
-        System.out.println(" ");
-    }
+        System.out.println("     "+ date.getDayOfWeek().toString());
+        System.out.println("    "+ this.toString());
+        System.out.println("------------------");
+
+        String[] dayCalendar = buildDayCalender();
+        for(String bookingInfo: dayCalendar){
+            System.out.println("   " + bookingInfo);
+        }
+        System.out.println("------------------\n");
+    }}
 
     @Override
     public String toString() {
