@@ -37,7 +37,7 @@ public class Day {
         }
         System.out.println("___________________");
     }
-  
+
   public int getDay(){
         return date.getDayOfMonth();
     }
@@ -126,8 +126,6 @@ public class Day {
             ArrayList<Booking> currentBookings = this.getBookings();
             Booking bookingToEdit = currentBookings.get(id - 1);
             if (bookingToEdit.getCustomerName() != null) {
-                System.out.print("Here are the current booking details: ");
-                System.out.println(day.getBookings().get(id-1).toString());
                 System.out.print("Please write the name you want to change to: ");
                 String newName = in.nextLine();
                 bookingToEdit.setCustomerName(newName);
@@ -149,8 +147,6 @@ public class Day {
             ArrayList<Booking> currentBookings = this.getBookings();
             Booking bookingToEdit = currentBookings.get(id - 1);
             if (bookingToEdit.getHaircutPrice() != 0) {
-                System.out.print("Here are the current booking details: ");
-                System.out.println(day.getBookings().get(id-1).toString());
                 System.out.print("Please write the new haircut price here: ");
                 double newPrice = in.nextInt();
                 in.nextLine(); //Scanner bug
@@ -166,7 +162,7 @@ public class Day {
         }
     }
 
-    public void checkBookingInEditBooking(Day day, int id) {
+    public boolean checkBookingInEditBooking(Day day, int id) {
         if (id >= 1 && id <= 8) {
             ArrayList<Booking> currentBookings = this.getBookings();
             Booking booking = currentBookings.get(id - 1);
@@ -175,11 +171,15 @@ public class Day {
             if (customer.getName() != null) {
                 System.out.print("Here are the current booking details: ");
                 System.out.println(day.getBookings().get(id-1).toString());
+                return true;
             } else {
-                System.out.println("No booking has been found in this timeslot\n");
+                System.out.println("No booking has been found in this timeslot");
+                return false;
             }
         } else {
             System.out.print("This is not a valid time slot. Try again");
+            checkBookingInEditBooking(day, id);
+            return true;
         }
     }
 
@@ -234,7 +234,7 @@ public class Day {
             System.out.println(product.getName());
         }
         userInput.nextLine();
-        System.out.print("Would you like to add more? y/n: ");
+        System.out.print("Would you like to add more products to the list? y/n: ");
         userChoice = userInput.nextLine();
         if (userChoice.equalsIgnoreCase("y")) {
             addProductsToBooking(booking);
@@ -253,34 +253,36 @@ public class Day {
         }
         System.out.print("What product do you want to delete from the booking? Please write here: ");
         chosenProductId = in.nextInt();
+        in.nextLine(); //Scanner bug
 
-        for (Product product : availableProducts) {
-            if (chosenProductId == product.getId()) {
-                switch (chosenProductId) {
-                    case 1 -> products.remove(availableProducts.get(0));
-                    case 2 -> products.remove(availableProducts.get(1));
-                    case 3 -> products.remove(availableProducts.get(2));
-                    case 4 -> products.remove(availableProducts.get(3));
-                    case 5 -> products.remove(availableProducts.get(4));
-                    case 6 -> products.remove(availableProducts.get(5));
-                    default -> System.out.println("Illegal choice. No products added.\nGo to edit booking menu.");
+        if (chosenProductId >= 1 && chosenProductId <= 8) {
+            for (Product product : availableProducts) {
+                if (chosenProductId == product.getId()) {
+                    if (products.contains(product)) {
+                        products.remove(product);
+                        System.out.println("The booking now has " + products.size() + " products.");
+                        for (Product remainingProduct : products) {
+                            System.out.println(remainingProduct.getName());
+                        }
+                        if (products.size() == 0) {
+                            System.out.println("You will be redirected to main menu as there are no more products left");
+                        } else {
+                        System.out.print("Would you like to delete another products from the list? y/n: ");
+                        userChoice = in.nextLine();
+                        if (userChoice.equalsIgnoreCase("y")) {
+                            deleteProductsFromBooking(booking);
+                        }
+                        }
+                    } else {
+                        System.out.println("This product is not available in this booking. Please try again!");
+                        deleteProductsFromBooking(booking);
+                    }
                 }
-                System.out.println("The booking now has " + products.size()+ " products.");
-                for (Product remainingProduct : products) {
-                    System.out.println(remainingProduct.getName());
-                }
-                in.nextLine();
-                System.out.print("Would you like to delete more? y/n: ");
-                userChoice = in.nextLine();
-                if (userChoice.equalsIgnoreCase("y")) {
-                    deleteProductsFromBooking(booking);
-                }
-            } else {
-                System.out.println("You have now removed the product from the booking.");
             }
+        } else {
+            System.out.println("This is not a valid ID. Please try again!");
+            deleteProductsFromBooking(booking);
         }
-
-
     }
 
     public ArrayList<Booking> getBookings() {
