@@ -6,14 +6,6 @@ public class Customer {
         this.name = name;
     }
 
-    public Customer() {
-        this.name = null;
-    }
-
-    public int getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
