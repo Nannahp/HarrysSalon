@@ -100,43 +100,5 @@ public class Calender {
         }
     }
 
-    public void addHardcodedDay(Day day, Calender calender) {
-        Day hardcodedDay = day;
-        Customer hardcodedCustomer = new Customer("H. Uman");
-        ArrayList<Booking> hardcodedBookings = new ArrayList<>();
-        hardcodedBookings.add(new Booking(1, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
-        hardcodedBookings.add(new Booking(2, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
-        hardcodedBookings.add(new Booking(3, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
-        hardcodedBookings.add(new Booking(4, hardcodedDay, hardcodedCustomer, 99, randomProducts()));
-        hardcodedBookings.add(new Booking(5, hardcodedDay, hardcodedCustomer, 99, randomProducts()));
-        hardcodedBookings.add(new Booking(6, hardcodedDay, hardcodedCustomer, 246, randomProducts()));
-        hardcodedBookings.add(new Booking(7, hardcodedDay, hardcodedCustomer, 567, randomProducts()));
-        hardcodedBookings.add(new Booking(8, hardcodedDay, hardcodedCustomer, 123, randomProducts()));
-
-        calender.addDay(hardcodedDay);
-        hardcodedDay.setBookings(hardcodedBookings);
-
-        // Forklaring på hvilken hardcoded dato der er at tjekke før i dag da man ikke kan booke i fortiden
-        System.out.println("\n---DISCLAIMER---DISCLAIMER---DISCLAIMER---");
-        System.out.println("Please note that until we have the ability to keep dates in file,");
-        System.out.println("with the methods used and choices made at the moment, we are not really able to see");
-        System.out.println("real past dates that have been added before today's date");
-        System.out.println("Therefore we have provided a past date, hardcoded as a dummy date");
-        System.out.println("so that the teachers can test the program from the accountant's perspective");
-        System.out.println();
-        System.out.println("The hardcoded date to check is: 03-03-2020");
-        System.out.println("But feel free to also check other dates too! They are just a bit boring as they");
-        System.out.println("are empty by default :)");
-        System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---\n");
-    }
-
-    //For the addHardcodedDay
-    public ArrayList<Product> randomProducts() {
-        ArrayList<Product> randomProducts = new ArrayList<>();
-        for (int i = 0; i < (int)(Math.random() * 3) + 1; i++) {
-            randomProducts.add(ProductBuilder.getProducts().get((int)(Math.random() * 5) + 1));
-        }
-        return randomProducts;
-    }
 
 }

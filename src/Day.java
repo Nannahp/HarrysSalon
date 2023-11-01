@@ -7,36 +7,23 @@ import java.util.Scanner;
 
 public class Day {
     private LocalDate date;
-    Calender calender = new Calender("Harry's calender");
     private ArrayList<Booking> bookings = new ArrayList<Booking>(8);
     private ArrayList<Product> availableProducts = new ProductBuilder().getProducts();
     private boolean holiday;
     private boolean weekend;
 
     public Day(int day, int month, int year) {
-        if(year > 2000 && year < 2030){
         try {
             this.date = LocalDate.of(year, month, day);
             initializeBookings();
             registerClosedDay(); // if it's a weekend then it closes the bookings
         } catch (DateTimeException e) {
             this.date = null;
-            System.out.println("Date does not exist. Are you sure you have entered the right date?");
 
-        }}
-        else {this.date =null;
-            System.out.println("Please only enter years between 2000 - 2030");}
+            System.out.println("This Date does not exist. Try again with a new date.");
+        }
     }
 
-    public int getDay(){
-        return date.getDayOfMonth();
-    }
-    public int getMonth(){
-        return date.getMonthValue();
-    }
-    public int getYear(){
-        return date.getYear();
-    }
 
     private void initializeBookings() {
         for (int i = 1; i < 9; i++) {
@@ -50,6 +37,16 @@ public class Day {
             System.out.println(booking.toString() + "\n");
         }
         System.out.println("___________________");
+    }
+  
+  public int getDay(){
+        return date.getDayOfMonth();
+    }
+    public int getMonth(){
+        return date.getMonthValue();
+    }
+    public int getYear(){
+        return date.getYear();
     }
 
     public LocalDate getDate() {
@@ -69,6 +66,8 @@ public class Day {
     public void closeDay(){
         this.bookings.clear();
     }
+
+
     public String[] buildClosedMessage() {                   //booking listen er 0 for lukkede dage, derfor kan den ikke bruges
         String[] closedMessage = new String[8];              //til at definerer størrelsen på beskeden. Kan give fejl i fremtiden,
         for (int i = 0; i < closedMessage.length; i++) {     //hvis størrelsen på listen ændres, fx med flere tider.
@@ -96,7 +95,6 @@ public class Day {
         Scanner userInput = new Scanner(System.in);
         String customerName;
         double haircutPrice;
-        String userChoice;
         int arrayId = timeslotId -1;
 
         if (timeslotId >= 1 && timeslotId <= 8) {
@@ -110,16 +108,6 @@ public class Day {
             System.out.print("What is the price of the haircut: ");
             haircutPrice = userInput.nextInt();
             currentBookings.get(arrayId).setHaircutPrice(haircutPrice);
-
-
-            /*System.out.print("Do you want to add products to the booking? please enter y/n: ");
-            userInput.nextLine(); // scanner bug
-            userChoice = userInput.nextLine();
-            if (userChoice.equalsIgnoreCase("y")) {
-                addProductsToBooking(currentBookings.get(arrayId));
-            } else {
-                System.out.println("No products added to the booking.");
-            }*/
 
             System.out.println();
             System.out.println("This is your booking:");
@@ -178,10 +166,6 @@ public class Day {
             System.out.print("This is not a valid time slot. Please try again");
         }
     }
-
-    /*public void setBookings(ArrayList<Booking> bookings) {
-        this.bookings = bookings;
-    }*/
 
     public void checkBookingInEditBooking(Day day, int id) {
         if (id >= 1 && id <= 8) {
@@ -293,7 +277,7 @@ public class Day {
                     deleteProductsFromBooking(booking);
                 }
             } else {
-                System.out.println("The chosen product is not a part of the list");
+                System.out.println("You have now removed the product from the booking.");
             }
         }
 
@@ -307,9 +291,10 @@ public class Day {
     public void setBookings(ArrayList<Booking> bookings) {
         this.bookings = bookings;
     }
-    public ArrayList<Product> getAvailableProducts() {
-        return availableProducts;
-    }
+
+
+
+
 
     public String[] buildOpenDayMessage(){
         String[] dayCalender = new String[bookings.size()];
