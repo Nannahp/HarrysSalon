@@ -19,7 +19,6 @@ public class Day {
             registerClosedDay(); // if it's a weekend then it closes the bookings
         } catch (DateTimeException e) {
             this.date = null;
-
             System.out.println("This Date does not exist. Try again with a new date.");
         }
     }

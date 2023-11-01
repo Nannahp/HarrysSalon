@@ -62,12 +62,12 @@ public class BookingSystem {
         }
     }
 
-    private Day enterDate() {
+/*    private Day enterDate() {
         int day = 0; // Initialize to default values
         int month = 0; // Initialize to default values
         int year = 0; // Initialize to default values
 
-        do {
+   *//*     do {
             try {
                 System.out.print("\nPlease give the day in format 'DD': ");
                 day = in.nextInt();
@@ -97,15 +97,75 @@ public class BookingSystem {
                 }
 
                 System.out.println(" "); // New line for better view when printing the day
+
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter numeric values for the date.");
+                in.nextLine(); // Clear the input buffer
+            }
+        } while (true); // Run indefinitely until a valid date is entered*//*
+
+
+    }*/
+
+
+    private Day enterDate() {
+        int day = 0;
+        int month = 0;
+        int year= 0;
+
+        do {
+            try {
+                System.out.print("\nPlease give the day in format 'DD': ");
+                int inputDay = in.nextInt();
+                in.nextLine(); // Consume the newline character left in the buffer
+
+                if (inputDay < 1 || inputDay > 31) {
+                    System.out.println("Invalid day. Please ensure the day is between 1 and 31.");
+                    continue; // Invalid day, loop again
+                }
+                day = inputDay;
+
+                System.out.print("Please give the month in format 'MM': ");
+                int inputMonth = in.nextInt();
+                in.nextLine(); // Consume the newline character left in the buffer
+
+                if (inputMonth < 1 || inputMonth > 12) {
+                    System.out.println("Invalid month. Please ensure the month is between 1 and 12.");
+                    continue; // Invalid month, loop again
+                }
+                month = inputMonth;
+
+                System.out.print("Please give the year in format 'YYYY': ");
+                int inputYear = in.nextInt();
+                in.nextLine(); // Consume the newline character left in the buffer
+
+                if (inputYear < 2000 || inputYear > 2030) {
+                    System.out.println("Invalid year. Please ensure the year is between 2000 and 2030.");
+                    continue; // Invalid year, loop again
+                }
+                year = inputYear;
+
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter numeric values for the date.");
                 in.nextLine(); // Clear the input buffer
                 continue;
             }
 
-        } while (calender.searchForDate(day, month, year) == null); // runs until a valid date is entered
+           /* // Check if the year is within the valid range
+            if (year >= 2000 && year <= 2030) {
+                Day searchedDay = calender.searchForDate(day, month, year);
+                if (searchedDay != null) {
+                    return searchedDay;
+                } else {
+                    System.out.println("Date not found in the calendar. Please try again.");
+                }
+            }*/
+
+        } while (year == 0); // runs until a valid date is entered
+
         return calender.searchForDate(day, month, year);
     }
+
 
 
 
