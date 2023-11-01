@@ -15,7 +15,7 @@ public class BookingSystem {
     public void run() {
         addHardcodedDay();
         showIntroMessage();
-        //runLogin();
+        runLogin();
         while(systemRunning){runFirstMenu();}
     }
 
@@ -140,7 +140,7 @@ public class BookingSystem {
                 System.out.println("are empty by default :)");
                 System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---\n");
                 System.out.println();
-        calender.addHardcodedDay(day, calender);
+
         runAccountantMenu(day);
     }
     private void sendToFutureMenu(Day day){
