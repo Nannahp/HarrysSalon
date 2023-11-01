@@ -6,7 +6,7 @@ public class Booking {
     private String timeSlot;
     private Customer customer;
     private double haircutPrice;
-    private double productPrice;
+    private double productPrice = 0;
     private double bookingTotal;
     private Day day;
     private ArrayList<Product> products = new ArrayList<Product>();
@@ -49,6 +49,7 @@ public class Booking {
         }
     }
 
+
     public int getId() {
         return id;
     }
@@ -67,6 +68,10 @@ public class Booking {
 
     public String getCustomerName() {
         return customer.getName();
+    }
+
+    public void setCustomerName(String name) {
+        customer.setName(name);
     }
 
     public void setCustomer(Customer customer) {
@@ -93,26 +98,28 @@ public class Booking {
         return products;
     }
 
-    public double getProductPrice(){
-        return productPrice;
+    public double calcProductPrice(){
+
+            return productPrice;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
+    }
+
+    public void setBookingTotal(int Total) {
+        this.bookingTotal = Total;
     }
 
     public double calcTotal() {
-
-        //reset values;
-        productPrice= 0;
-        haircutPrice = this.getHaircutPrice();
-        bookingTotal = 0;
-
         if (!this.getProducts().isEmpty()) {
-            for (Product product: this.getProducts()) {
-                productPrice += product.getPrice();
+            for (Product product : this.getProducts()) {
+                productPrice = productPrice + product.getPrice();
             }
             bookingTotal = haircutPrice + productPrice;
         } else {
             bookingTotal = haircutPrice;
         }
-
         return bookingTotal;
     }
 

@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class Day {
     private LocalDate date;
+    Calender calender = new Calender("Harry's calender");
     private ArrayList<Booking> bookings = new ArrayList<Booking>(8);
     private ArrayList<Product> availableProducts = new ProductBuilder().getProducts();
     private boolean holiday;
@@ -26,6 +27,57 @@ public class Day {
         else {this.date =null;
             System.out.println("Please only enter years between 2000 - 2030");}
     }
+
+    //_________________________________________________________________________________________
+
+    //!\\ For the hardcoded day again
+    public ArrayList<Product> randomProducts() {
+        ArrayList<Product> randomProducts = new ArrayList<>();
+        for (int i = 0; i < (int)(Math.random() * 3) + 1; i++) {
+            randomProducts.add(ProductBuilder.getProducts().get((int)(Math.random() * 5) + 1));
+        }
+        return randomProducts;
+    }
+
+    // *******************************************************
+
+    //!\\ ADDING a hardcoded day to check out when check past dates details!
+    public void addHardcodedDay() {
+        Day hardcodedDay = new Day(3, 3, 2020);
+        Customer hardcodedCustomer = new Customer("H. Uman");
+        ArrayList<Booking> hardcodedBookings = new ArrayList<>();
+        hardcodedBookings.add(new Booking(1, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
+        hardcodedBookings.add(new Booking(2, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
+        hardcodedBookings.add(new Booking(3, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
+        hardcodedBookings.add(new Booking(4, hardcodedDay, hardcodedCustomer, 99, randomProducts()));
+        hardcodedBookings.add(new Booking(5, hardcodedDay, hardcodedCustomer, 99, randomProducts()));
+        hardcodedBookings.add(new Booking(6, hardcodedDay, hardcodedCustomer, 246, randomProducts()));
+        hardcodedBookings.add(new Booking(7, hardcodedDay, hardcodedCustomer, 567, randomProducts()));
+        hardcodedBookings.add(new Booking(8, hardcodedDay, hardcodedCustomer, 123, randomProducts()));
+
+        calender.addDay(hardcodedDay);
+        hardcodedDay.setBookings(hardcodedBookings);
+
+        System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---");
+        // Forklaring på hvilket hardcoded dato der er at tjekke hvis man vil kunne se noget spændende
+        // ellers er der nemlig kun tomme days med tomme bookings fordi vi ikke kan add en booking for
+        // en dag før dagen dag.
+        System.out.println("Please note that until we have the ability to keep dates in file,");
+        System.out.println("with the methods used and choices made AND/OR the fact that it would require");
+        System.out.println("a few days to do this authentically we are not really able to see");
+        System.out.println("real past dates that have been added before today's date");
+        System.out.println("Therefore we have provided a past date hardcoded as a dummy date");
+        System.out.println("so that you teachers can test the program without being cheated from ");
+        System.out.println("the accountant's perspective");
+        System.out.println();
+        System.out.println("The hardcoded date to check is the 03-03-2020");
+        System.out.println("But feel free to also check other dates out too, they are just boring as they");
+        System.out.println("are empty by default.");
+        System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---\n");
+    }
+
+    //_________________________________________________________________________________________
+
 
     private void initializeBookings() {
         for (int i = 1; i < 9; i++) {
@@ -101,14 +153,14 @@ public class Day {
             currentBookings.get(arrayId).setHaircutPrice(haircutPrice);
 
 
-            System.out.println("Do you want to add products to the booking? y/n");
+            /*System.out.print("Do you want to add products to the booking? please enter y/n: ");
             userInput.nextLine(); // scanner bug
             userChoice = userInput.nextLine();
             if (userChoice.equalsIgnoreCase("y")) {
                 addProductsToBooking(currentBookings.get(arrayId));
             } else {
                 System.out.println("No products added to the booking.");
-            }
+            }*/
 
             System.out.println();
             System.out.println("This is your booking:");
@@ -116,9 +168,99 @@ public class Day {
 
             System.out.println("Thank you for adding a booking.");
 
-
         } else {
             System.out.println("This is not a valid time slot. Try again.");
+        }
+    }
+
+    public void editCustomerNameByTimeSlot(Day day, int id) {
+        Scanner in = new Scanner(System.in);
+
+        if (id >= 1 && id <= 8) {
+            ArrayList<Booking> currentBookings = this.getBookings();
+            Booking bookingToEdit = currentBookings.get(id - 1);
+            if (bookingToEdit.getCustomerName() != null) {
+                System.out.print("Here are the current booking details: ");
+                System.out.println(day.getBookings().get(id-1).toString());
+                System.out.print("Please write the name you want to change to: ");
+                String newName = in.nextLine();
+                bookingToEdit.setCustomerName(newName);
+                System.out.print("The name has been updated. Here are the new booking details: ");
+                System.out.println(day.getBookings().get(id-1).toString());
+            } else {
+                System.out.println("It seems that there is no booking in this time slot. Please look at\n " +
+                        "the updated day and see if you meant another time slot\n");
+            }
+        } else {
+            System.out.print("This is not a valid time slot. Please try again");
+        }
+    }
+
+    public void editHaircutPriceByTimeSlot(Day day, int id) {
+        Scanner in = new Scanner(System.in);
+
+        if (id >= 1 && id <= 8) {
+            ArrayList<Booking> currentBookings = this.getBookings();
+            Booking bookingToEdit = currentBookings.get(id - 1);
+            if (bookingToEdit.getHaircutPrice() != 0) {
+                System.out.print("Here are the current booking details: ");
+                System.out.println(day.getBookings().get(id-1).toString());
+                System.out.print("Please write the new haircut price here: ");
+                double newPrice = in.nextInt();
+                in.nextLine(); //Scanner bug
+                bookingToEdit.setHaircutPrice(newPrice);
+                System.out.print("The haircut price has been updated. Here are the new booking details: ");
+                System.out.println(day.getBookings().get(id-1).toString());
+            } else {
+                System.out.println("It seems that there is no booking in this time slot. Please look at\n " +
+                        "the updated day and see if you meant another time slot\n");
+            }
+        } else {
+            System.out.print("This is not a valid time slot. Please try again");
+        }
+    }
+
+    /*public void setBookings(ArrayList<Booking> bookings) {
+        this.bookings = bookings;
+    }*/
+
+    public void checkBookingInEditBooking(Day day, int id) {
+        if (id >= 1 && id <= 8) {
+            ArrayList<Booking> currentBookings = this.getBookings();
+            Booking booking = currentBookings.get(id - 1);
+            Customer customer = booking.getCustomer();
+
+            if (customer.getName() != null) {
+                System.out.print("Here are the current booking details: ");
+                System.out.println(day.getBookings().get(id-1).toString());
+            } else {
+                System.out.println("No booking has been found in this timeslot\n");
+            }
+        } else {
+            System.out.print("This is not a valid time slot. Try again");
+        }
+    }
+
+    public void deleteBookingByTimeSlot(int id) {
+        if (id >= 1 && id <= 8) {
+            ArrayList<Booking> currentBookings = this.getBookings();
+            Booking deletedBooking = currentBookings.get(id - 1);
+            Customer deletedCustomer = deletedBooking.getCustomer();
+
+            //Check if the given timeslot is booked
+            if (deletedCustomer.getName() != null) {
+                System.out.println("Deleting booking for " + deletedBooking.getDay().toString() + ": " +
+                        deletedBooking.getTimeSlot());
+
+                deletedCustomer.setName(null);
+                currentBookings.get(id - 1).setHaircutPrice(0);
+                currentBookings.get(id - 1).getProducts().clear();
+                System.out.println("The booking has been deleted");
+            } else {
+                System.out.println("No booking has been found in this timeslot\n");
+            }
+        } else {
+            System.out.print("This is not a valid time slot. Try again");
         }
     }
 
@@ -132,7 +274,7 @@ public class Day {
         for (Product product : availableProducts) {
             System.out.println(product.getId() + ": " + product.getName());
         }
-        System.out.println("What product do you want to add to the booking? (Type product id(number))");
+        System.out.print("What product do you want to add to the booking? Please write here: ");
         chosenProductId = userInput.nextInt();
 
         switch (chosenProductId) {
@@ -145,16 +287,57 @@ public class Day {
             default -> System.out.println("Illegal choice. No products added.\nGo to edit booking menu.");
         }
 
-        System.out.println("The booking has now " + products.size()+ " products.");
+        System.out.println("The booking now has " + products.size()+ " products.");
         for (Product product : products) {
             System.out.println(product.getName());
         }
         userInput.nextLine();
-        System.out.println("Add more? y/n");
+        System.out.print("Would you like to add more? y/n: ");
         userChoice = userInput.nextLine();
         if (userChoice.equalsIgnoreCase("y")) {
             addProductsToBooking(booking);
         }
+    }
+
+    public void deleteProductsFromBooking(Booking booking) {
+        Scanner in = new Scanner(System.in);
+        int chosenProductId;
+        String userChoice;
+        ArrayList<Product> products = booking.getProducts();
+
+        System.out.println("Here is a list of all the products available with their id number:");
+        for (Product product : availableProducts) {
+            System.out.println(product.getId() + ": " + product.getName());
+        }
+        System.out.print("What product do you want to delete from the booking? Please write here: ");
+        chosenProductId = in.nextInt();
+
+        for (Product product : availableProducts) {
+            if (chosenProductId == product.getId()) {
+                switch (chosenProductId) {
+                    case 1 -> products.remove(availableProducts.get(0));
+                    case 2 -> products.remove(availableProducts.get(1));
+                    case 3 -> products.remove(availableProducts.get(2));
+                    case 4 -> products.remove(availableProducts.get(3));
+                    case 5 -> products.remove(availableProducts.get(4));
+                    case 6 -> products.remove(availableProducts.get(5));
+                    default -> System.out.println("Illegal choice. No products added.\nGo to edit booking menu.");
+                }
+                System.out.println("The booking now has " + products.size()+ " products.");
+                for (Product remainingProduct : products) {
+                    System.out.println(remainingProduct.getName());
+                }
+                in.nextLine();
+                System.out.print("Would you like to delete more? y/n: ");
+                userChoice = in.nextLine();
+                if (userChoice.equalsIgnoreCase("y")) {
+                    deleteProductsFromBooking(booking);
+                }
+            } else {
+                System.out.println("The chosen product is not a part of the list");
+            }
+        }
+
 
     }
 
@@ -164,6 +347,9 @@ public class Day {
 
     public void setBookings(ArrayList<Booking> bookings) {
         this.bookings = bookings;
+    }
+    public ArrayList<Product> getAvailableProducts() {
+        return availableProducts;
     }
 
     public String[] buildOpenDayMessage(){
