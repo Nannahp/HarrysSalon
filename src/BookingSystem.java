@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class BookingSystem {
@@ -61,27 +62,52 @@ public class BookingSystem {
         }
     }
 
-    //Method that asks for a date and creates a day out of it in calender
     private Day enterDate() {
-        int day, month, year;
+        int day = 0; // Initialize to default values
+        int month = 0; // Initialize to default values
+        int year = 0; // Initialize to default values
 
         do {
-            System.out.print("\nPlease give the date in format 'DD': ");
-            day = in.nextInt();
-            in.nextLine(); //Scanner bug
+            try {
+                System.out.print("\nPlease give the day in format 'DD': ");
+                day = in.nextInt();
+                in.nextLine(); // Consume the newline character left in the buffer
 
-            System.out.print("Please give the month in format 'MM': ");
-            month = in.nextInt();
-            in.nextLine(); //Scanner bug
+                if (day < 1 || day > 31) {
+                    System.out.println("Invalid day. Please ensure the day is between 1 and 31.");
+                    continue; // Invalid day, loop again
+                }
 
-            System.out.print("Please give the year in format 'YYYY': ");
-            year = in.nextInt();
-            in.nextLine(); //Scanner bug
-            System.out.println(" "); //New line for better view when printing the day
+                System.out.print("Please give the month in format 'MM': ");
+                month = in.nextInt();
+                in.nextLine(); // Consume the newline character left in the buffer
+
+                if (month < 1 || month > 12) {
+                    System.out.println("Invalid month. Please ensure the month is between 1 and 12.");
+                    continue; // Invalid month, loop again
+                }
+
+                System.out.print("Please give the year in format 'YYYY': ");
+                year = in.nextInt();
+                in.nextLine(); // Consume the newline character left in the buffer
+
+                if (year < 2000 || year > 2030) {
+                    System.out.println("Invalid year. Please ensure the year is between 2000 and 2030.");
+                    continue; // Invalid year, loop again
+                }
+
+                System.out.println(" "); // New line for better view when printing the day
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter numeric values for the date.");
+                in.nextLine(); // Clear the input buffer
+                continue;
+            }
 
         } while (calender.searchForDate(day, month, year) == null); // runs until a valid date is entered
         return calender.searchForDate(day, month, year);
     }
+
+
 
     private boolean isDateBeforeToday(Day day) {
         isBeforeToday = day.getDate().isBefore(LocalDate.now());
@@ -96,6 +122,22 @@ public class BookingSystem {
             if (isBeforeToday) {
                 // Accountant menu
                 System.out.println("The date you have entered is before today!");
+                System.out.println();
+                // Forklaring på hvilken hardcoded dato der er at tjekke før i dag da man ikke kan booke i fortiden
+                System.out.println("\n---DISCLAIMER---DISCLAIMER---DISCLAIMER---");
+                System.out.println("Please note that until we have the ability to keep dates in file,");
+                System.out.println("with the methods used and choices made at the moment, we are not really able to see");
+                System.out.println("real past dates that have been added before today's date");
+                System.out.println("Therefore we have provided a past date, hardcoded as a dummy date");
+                System.out.println("so that the teachers can test the program from the accountant's perspective");
+                System.out.println();
+                System.out.println("The hardcoded date to check is: 03-03-2020");
+                System.out.println("But feel free to also check other dates too! They are just a bit boring as they");
+                System.out.println("are empty by default :)");
+                System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---\n");
+                System.out.println();
+
+
                 runAccountantMenu(day);
             } else {
                 // Employee - booking menu
@@ -151,19 +193,6 @@ public class BookingSystem {
 
 
 
-        // Forklaring på hvilken hardcoded dato der er at tjekke før i dag da man ikke kan booke i fortiden
-        System.out.println("\n---DISCLAIMER---DISCLAIMER---DISCLAIMER---");
-        System.out.println("Please note that until we have the ability to keep dates in file,");
-        System.out.println("with the methods used and choices made at the moment, we are not really able to see");
-        System.out.println("real past dates that have been added before today's date");
-        System.out.println("Therefore we have provided a past date, hardcoded as a dummy date");
-        System.out.println("so that the teachers can test the program from the accountant's perspective");
-        System.out.println();
-        System.out.println("The hardcoded date to check is: 03-03-2020");
-        System.out.println("But feel free to also check other dates too! They are just a bit boring as they");
-        System.out.println("are empty by default :)");
-        System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---\n");
-
 
 
 
@@ -206,8 +235,15 @@ public class BookingSystem {
     private void addBooking(Day day) {
         int timeslotId;
 
-        System.out.print("\nIn what time slot do you want add a booking? Please write here: ");
-        timeslotId = chooseTimeSlot();
+        System.out.print("\nIn what time slot do you want to add a booking? Please write here: ");
+        try {
+            timeslotId = chooseTimeSlot();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a valid time slot.");
+            in.nextLine(); // Clear the input buffer
+            addBooking(day);
+            return;
+        }
         day.addBookingToTimeSlot(timeslotId);
 
         System.out.println("Here is the updated day: \n");
@@ -237,27 +273,35 @@ public class BookingSystem {
         System.out.println(day.getBookings().get(timeSlotId-1).toString());
     }
 
-    //Menu for editing bookings
+    //Method for editing bookings
     private void editBooking(Day day) {
         Menu menu = new Menu("Would you like to: ", new String[] {
                 "1. Edit product list",
                 "2. Edit customer name",
                 "3. Edit haircut price",
-                "4. Go back to main menu"
-                //"4. Change payment method"
+                "4. Go back to the main menu"
+                // "4. Change payment method"
         });
 
         menu.printMenu();
         System.out.print("Please write your choice here: ");
 
-        int userChoice = menu.readChoice();
+        int userChoice;
+        try {
+            userChoice = menu.readChoice();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a valid menu choice.");
+            in.nextLine(); // Clear the input buffer
+            editBooking(day);
+            return;
+        }
 
         switch (userChoice) {
             case 1 -> editProductList(day);
             case 2 -> editCustomerName(day);
             case 3 -> editHaircutPrice(day);
             case 4 -> {
-                System.out.println("Returning to main menu");
+                System.out.println("Returning to the main menu");
                 runFirstMenu();
             }
             default -> {
@@ -335,9 +379,6 @@ public class BookingSystem {
         timeSlotId = chooseTimeSlot();
 
         day.editHaircutPriceByTimeSlot(day, timeSlotId);
-        //day.displayBookingList();
-        //System.out.println("Here is the updated day: \n");
-        //runBookingMenu(day);
     }
 
     public void addHardcodedDay() {
@@ -370,4 +411,5 @@ public class BookingSystem {
         System.out.println("Goodbye for now!");
         systemRunning = false;
     }
+
 }

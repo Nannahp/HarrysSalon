@@ -51,12 +51,6 @@ public class Booking {
         }
     }
 
-/*
-
-    public int getId() {
-        return id;
-    }
-*/
 
     public String getTimeSlot() {
         return timeSlot;
@@ -78,9 +72,6 @@ public class Booking {
         customer.setName(name);
     }
 
-/*    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }*/
 
     public double getHaircutPrice() {
         return haircutPrice;
@@ -102,28 +93,25 @@ public class Booking {
         return products;
     }
 
-/*    public double calcProductPrice(){
-            return productPrice;
-    }
-
-    public void setProducts(ArrayList<Product> products) {
-        this.products = products;
-    }
-
-*/
 
     public double calcTotal() {
-        productPrice = 0;
-        if (!this.getProducts().isEmpty()) {
-            for (Product product : this.getProducts()) {
-                productPrice += product.getPrice();
+        try {
+            productPrice = 0;
+            if (!this.getProducts().isEmpty()) {
+                for (Product product : this.getProducts()) {
+                    productPrice += product.getPrice();
+                }
+                bookingTotal = haircutPrice + productPrice;
+            } else {
+                bookingTotal = haircutPrice;
             }
-            bookingTotal = haircutPrice + productPrice;
-        } else {
-            bookingTotal = haircutPrice;
+        } catch (Exception e) {
+            System.out.println("There was an error in calculating the total. Try again.");
+            bookingTotal = 0; // Set a default value
         }
-         return bookingTotal;
+        return bookingTotal;
     }
+
 
 
     public double getBookingTotal() {
@@ -134,31 +122,37 @@ public class Booking {
 
     @Override
     public String toString() {
+        StringBuilder sb = new StringBuilder();
 
         // String builder to build a string of looped products because you can't loop in a return statement :)
-        StringBuilder sb = new StringBuilder("\nItem/s bought:\n");
-
-        for (int i = 0; i < this.getProducts().size(); i++) {
-            sb.append(this.getProducts().get(i).getName()).append(": ").append(this.getProducts().get(i).getPrice()).append(",-\n");
-        }
-        String str = sb.toString();
-
-        //Nested if
-
-        //If booking ISN'T empty (customer NOT null and/or price NOT 0 )
-        if (this.getCustomer() != null || this.getHaircutPrice() != 0) {
-            // then check if bookings products arrayList is empty
-            if (!this.getProducts().isEmpty()) {
-                //IF NOT display this
-                return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-" + str + "Booking total: " + this.calcTotal() + ",-\n";
-            } else {
-                // if YES display this
-                return "Booking " + this.getTimeSlot() + "\nCustomer name: " + this.getCustomer().getName() + "\nHaircut Price: " + this.getHaircutPrice() + ",-" + "\nBooking total: " + this.calcTotal() + ",-\n";
+        try {
+            for (int i = 0; i < this.getProducts().size(); i++) {
+                sb.append(this.getProducts().get(i).getName()).append(": ").append(this.getProducts().get(i).getPrice()).append(",-\n");
             }
-            //If booking IS empty (customer null and/or price = 0 )
-        } else {
-            // then display this
-            return "Booking " + this.getTimeSlot() + "\nCustomer name: " + "No customer yet" + "\nHaircut Price: " + "No price yet";
+        } catch (Exception e) {
+            sb.append("Error generating product details");
         }
+
+        String productString = sb.toString();
+
+        // Booking details
+        sb = new StringBuilder("Booking ").append(this.getTimeSlot()).append("\n");
+        if (this.getCustomer().getName() != null || this.getHaircutPrice() != 0) {
+            sb.append("Customer name: ").append(this.getCustomer().getName()).append("\n");
+            sb.append("Haircut Price: ").append(this.getHaircutPrice()).append(",-\n");
+            if (!this.getProducts().isEmpty()) {
+                sb.append("Item/s bought:\n").append(productString);
+            }
+            try {
+                sb.append("Booking total: ").append(this.calcTotal()).append(",-\n");
+            } catch (Exception e) {
+                sb.append("Error calculating booking total");
+            }
+        } else {
+            sb.append("Customer name: --\n");
+            sb.append("Haircut Price: --\n");
+        }
+        return sb.toString();
     }
+
 }
