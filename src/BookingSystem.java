@@ -44,9 +44,7 @@ public class BookingSystem {
     //First method with menu choice to quit, register holidays or search for date
     private void runFirstMenu() {
         Menu menu = new Menu("You have the following choices: ", new String[] {
-                "1. Search for a date",
-                "2. Register holidays",
-                "3. Quit the program"
+                "1. Search for a date", "2. Register holidays", "3. Quit the program"
         });
 
         menu.printMenu();
@@ -102,7 +100,7 @@ public class BookingSystem {
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter numeric values for the date.");
                 in.nextLine(); // Clear the input buffer
-                continue;
+                //continue;
             }
 
            /* // Check if the year is within the valid range
@@ -116,12 +114,8 @@ public class BookingSystem {
             }*/
 
         } while (year == 0); // runs until a valid date is entered
-
         return calender.searchForDate(day, month, year);
     }
-
-
-
 
     private boolean isDateBeforeToday(Day day) {
         isBeforeToday = day.getDate().isBefore(LocalDate.now());
@@ -135,8 +129,8 @@ public class BookingSystem {
             } else {
                 sendToFutureMenu(day);
             }
-
     }
+
     private void sendToPastMenu(Day day){
         System.out.println("The date you have entered is before today!");
 
@@ -157,6 +151,7 @@ public class BookingSystem {
 
         runAccountantMenu(day);
     }
+
     private void sendToFutureMenu(Day day){
         calender.showCalender(day);
         if (day.getWeekend()|| day.getHoliday()){
@@ -170,8 +165,7 @@ public class BookingSystem {
         System.out.println("\nYou are currently on "+ day.toString());
         System.out.println("Current date is closed");
         Menu menu = new Menu("Now you have the following choices: ", new String[]{
-                "1. Go to one of the following dates",
-                "2. Go back to main menu"
+                "1. Go to one of the following dates", "2. Go back to main menu"
         });
         menu.printMenu();
         System.out.print("Please write your choice here: ");
@@ -186,18 +180,16 @@ public class BookingSystem {
                 System.out.print("This is not a valid choice. Please try again!\n");
                 runClosedMenu(day);
             }
+        }
+    }
 
-    }
-    }
     private void goToAnotherDate(Day day){
         Day day1 = calender.searchForDate(day.getDay()+1, day.getMonth(), day.getYear());
         Day day2 = calender.searchForDate(day.getDay()+2, day.getMonth(), day.getYear());
         Day day3 = calender.searchForDate(day.getDay()+3, day.getMonth(), day.getYear());
         Day day4 = calender.searchForDate(day.getDay()+4, day.getMonth(), day.getYear());
         Menu menu = new Menu("Which date would you like to go to: ", new String[]{
-                "1. " + day1.toString(),
-                "2. " + day2.toString(),
-                "3. " + day3.toString(),
+                "1. " + day1.toString(), "2. " + day2.toString(), "3. " + day3.toString(),
                 "4. " + day4.toString(),
         });
         menu.printMenu();
@@ -215,14 +207,13 @@ public class BookingSystem {
             }
         }
     }
+
     //Method after selected date to either add, delete or edit bookings
     private void runBookingMenu(Day day) {
         System.out.println("\nYou are currently on "+ day.toString());
             Menu menu = new Menu("Now you have the following choices: ", new String[]{
-                    "1. Add a booking to current day",
-                    "2. Delete a booking to current day",
-                    "3. Edit a booking to current day",
-                    "4. Go to one of the following dates",
+                    "1. Add a booking to current day", "2. Delete a booking to current day",
+                    "3. Edit a booking to current day", "4. Go to one of the following dates",
                     "5. Go back to main menu"
             });
         menu.printMenu();
@@ -249,8 +240,7 @@ public class BookingSystem {
     private void runAccountantMenu(Day day) {
         day.showDay();
         Menu menu = new Menu("Now you have the following choices: ", new String[] {
-                "1. See booking details",
-                "2. Go back to main menu"
+                "1. See booking details", "2. Go back to main menu"
         });
         menu.printMenu();
 
@@ -272,20 +262,22 @@ public class BookingSystem {
 
     private int chooseTimeSlot() {
         int timeslotId = 0;
-        while(timeslotId < 1 || timeslotId >8){ // if timeslot is before 10 or after 17 then keep trying
-         int chosenTimeslot = in.nextInt();
-         in.nextLine(); //Scanner bug
-         switch (chosenTimeslot) {
-            case 10 -> timeslotId = 1;
-            case 11 -> timeslotId = 2;
-            case 12 -> timeslotId = 3;
-            case 13 -> timeslotId = 4;
-            case 14 -> timeslotId = 5;
-            case 15 -> timeslotId = 6;
-            case 16 -> timeslotId = 7;
-            case 17 -> timeslotId = 8;
-            default -> System.out.print("This is not a valid time slot. Please enter another time:");
-        }}
+        while(timeslotId < 1 || timeslotId >8) { // if timeslot is before 10 or after 17 then keep trying
+            int chosenTimeslot = in.nextInt();
+            in.nextLine(); //Scanner bug
+
+            switch (chosenTimeslot) {
+                case 10 -> timeslotId = 1;
+                case 11 -> timeslotId = 2;
+                case 12 -> timeslotId = 3;
+                case 13 -> timeslotId = 4;
+                case 14 -> timeslotId = 5;
+                case 15 -> timeslotId = 6;
+                case 16 -> timeslotId = 7;
+                case 17 -> timeslotId = 8;
+                default -> System.out.print("This is not a valid time slot. Please enter another time:");
+            }
+        }
         return timeslotId;
     }
 
@@ -340,9 +332,7 @@ public class BookingSystem {
 
         if (checkBooking == true) {
             Menu menu = new Menu("Would you like to: ", new String[]{
-                    "1. Edit product list",
-                    "2. Edit customer name",
-                    "3. Edit haircut price",
+                    "1. Edit product list", "2. Edit customer name", "3. Edit haircut price",
                     "4. Go back to main menu"
                     //"4. Change payment method"
             });
@@ -377,14 +367,12 @@ public class BookingSystem {
             System.out.print("You will be redirected to the previous menu\n");
             runFirstMenu();
         }
-
     }
 
     private void editProductList(Day day, int timeSlotId) {
 
         Menu menu = new Menu("\nWould you like to: ", new String[] {
-                "1. Add a product to the list",
-                "2. Remove a product from the list",
+                "1. Add a product to the list", "2. Remove a product from the list",
                 "3. Go back to main menu"
         });
 
@@ -429,19 +417,14 @@ public class BookingSystem {
 
         System.out.print("\nIn what time slot do you want to edit the name? Please write here: ");
         timeSlotId = chooseTimeSlot();
-
         day.editCustomerNameByTimeSlot(day,timeSlotId);
-        //System.out.println("Here is the updated day: \n");
-        //day.showDay();
     }
 
     private void editHaircutPrice(Day day) {
         int timeSlotId;
 
         System.out.print("\nIn what time slot do you want to see the haircut price? Please write here: ");
-
         timeSlotId = chooseTimeSlot();
-
         day.editHaircutPriceByTimeSlot(day, timeSlotId);
     }
 
