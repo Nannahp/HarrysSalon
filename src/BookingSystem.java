@@ -210,7 +210,6 @@ public class BookingSystem {
         else {runBookingMenu(day);
 
         }
-
     }
 
     private void runClosedMenu(Day day){
@@ -226,7 +225,7 @@ public class BookingSystem {
         switch (userChoice) {
             case 1 -> goToAnotherDate(day);
             case 2 -> {
-                System.out.println("Returning to main menu");
+                System.out.println("Returning to the main menu");
                 runFirstMenu();
             }
             default -> {
@@ -266,9 +265,9 @@ public class BookingSystem {
     private void runBookingMenu(Day day) {
         System.out.println("\nYou are currently on "+ day.toString());
             Menu menu = new Menu("Now you have the following choices: ", new String[]{
-                    "1. Add a booking",
-                    "2. Delete a booking",
-                    "3. Edit a booking",
+                    "1. Add a booking to current day",
+                    "2. Delete a booking to current day",
+                    "3. Edit a booking to current day",
                     "4. Go to one of the following dates",
                     "5. Go back to main menu"
             });
@@ -282,7 +281,7 @@ public class BookingSystem {
             case 3 -> editBooking(day);
             case 4 -> goToAnotherDate(day);
             case 5 -> {
-                System.out.println("Returning to main menu");
+                System.out.println("Returning to the main menu");
                 runFirstMenu();
             }
             default -> {
@@ -301,19 +300,13 @@ public class BookingSystem {
         });
         menu.printMenu();
 
-
-
-
-
-
         System.out.print("Please write your choice here: ");
-
         int userChoice = menu.readChoice();
 
         switch (userChoice) {
             case 1 -> seeBookingDetail(day);
             case 2 -> {
-                System.out.println("Returning to main menu");
+                System.out.println("Returning to the main menu");
                 runFirstMenu();
             }
             default -> {
@@ -418,7 +411,7 @@ public class BookingSystem {
                 case 2 -> day.editCustomerNameByTimeSlot(day, timeSlotId);
                 case 3 -> day.editHaircutPriceByTimeSlot(day, timeSlotId);
                 case 4 -> {
-                    System.out.println("Returning to main menu");
+                    System.out.println("Returning to the main menu");
                     runFirstMenu();
                 }
                 default -> {
@@ -458,7 +451,7 @@ public class BookingSystem {
                 System.out.println(day.getBookings().get(timeSlotId-1).toString());
             }
             case 3 -> {
-                System.out.println("Returning to main menu");
+                System.out.println("Returning to the main menu");
                 runFirstMenu();
             }
             default -> {
