@@ -13,32 +13,15 @@ public class Day {
     private boolean weekend;
 
     public Day(int day, int month, int year) {
-        if(year > 2000 && year < 2030){
         try {
             this.date = LocalDate.of(year, month, day);
             initializeBookings();
             registerClosedDay(); // if it's a weekend then it closes the bookings
         } catch (DateTimeException e) {
             this.date = null;
-            System.out.println("Date does not exist. Are you sure you have entered the right date?");
-
-        }}
-        else {this.date =null;
-            System.out.println("Please only enter years between 2000 - 2030");}
-    }
-
-/*
-    //_________________________________________________________________________________________
-
-    //!\\ For the hardcoded day again
-    public ArrayList<Product> randomProducts() {
-        ArrayList<Product> randomProducts = new ArrayList<>();
-        for (int i = 0; i < (int)(Math.random() * 3) + 1; i++) {
-            randomProducts.add(ProductBuilder.getProducts().get((int)(Math.random() * 5) + 1));
+            System.out.println("This Date does not exist. Try again with a new date.");
         }
-        return randomProducts;
     }
-*/
 
 
     private void initializeBookings() {
@@ -101,7 +84,6 @@ public class Day {
         Scanner userInput = new Scanner(System.in);
         String customerName;
         double haircutPrice;
-/*        String userChoice;*/
         int arrayId = timeslotId -1;
 
         if (timeslotId >= 1 && timeslotId <= 8) {
@@ -115,16 +97,6 @@ public class Day {
             System.out.print("What is the price of the haircut: ");
             haircutPrice = userInput.nextInt();
             currentBookings.get(arrayId).setHaircutPrice(haircutPrice);
-
-
-            /*System.out.print("Do you want to add products to the booking? please enter y/n: ");
-            userInput.nextLine(); // scanner bug
-            userChoice = userInput.nextLine();
-            if (userChoice.equalsIgnoreCase("y")) {
-                addProductsToBooking(currentBookings.get(arrayId));
-            } else {
-                System.out.println("No products added to the booking.");
-            }*/
 
             System.out.println();
             System.out.println("This is your booking:");
@@ -183,10 +155,6 @@ public class Day {
             System.out.print("This is not a valid time slot. Please try again");
         }
     }
-
-    /*public void setBookings(ArrayList<Booking> bookings) {
-        this.bookings = bookings;
-    }*/
 
     public void checkBookingInEditBooking(Day day, int id) {
         if (id >= 1 && id <= 8) {
