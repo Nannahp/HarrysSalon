@@ -14,7 +14,7 @@ public class BookingSystem {
     public void run() {
         //addHardcodedDay();
         showIntroMessage();
-        runLogin();
+        //runLogin();
         while(systemRunning){runFirstMenu();}
     }
 
@@ -180,7 +180,7 @@ public class BookingSystem {
             case 15 -> timeslotId = 6;
             case 16 -> timeslotId = 7;
             case 17 -> timeslotId = 8;
-            default -> System.out.println("This is not a valid time slot. Please enter another time:");
+            default -> System.out.print("This is not a valid time slot. Please enter another time:");
         }}
         return timeslotId;
     }
@@ -221,40 +221,48 @@ public class BookingSystem {
 
     //Menu for editing bookings
     private void editBooking(Day day) {
-        Menu menu = new Menu("Would you like to: ", new String[] {
-                "1. Edit product list",
-                "2. Edit customer name",
-                "3. Edit haircut price",
-                "4. Go back to main menu"
-                //"4. Change payment method"
-        });
+        int timeSlotId;
+        boolean checkBooking;
 
-        menu.printMenu();
-        System.out.print("Please write your choice here: ");
+        System.out.print("\nIn what timeslot do you want to edit a booking? Please write here: ");
+        timeSlotId = chooseTimeSlot();
+        checkBooking = day.checkBookingInEditBooking(day, timeSlotId);
 
-        int userChoice = menu.readChoice();
+        if (checkBooking == true) {
+            Menu menu = new Menu("Would you like to: ", new String[]{
+                    "1. Edit product list",
+                    "2. Edit customer name",
+                    "3. Edit haircut price",
+                    "4. Go back to main menu"
+                    //"4. Change payment method"
+            });
 
-        switch (userChoice) {
-            case 1 -> editProductList(day);
-            case 2 -> editCustomerName(day);
-            case 3 -> editHaircutPrice(day);
-            case 4 -> {
-                System.out.println("Returning to main menu");
-                runFirstMenu();
+            menu.printMenu();
+            System.out.print("Please write your choice here: ");
+
+            int userChoice = menu.readChoice();
+
+            switch (userChoice) {
+                case 1 -> editProductList(day, timeSlotId);
+                case 2 -> day.editCustomerNameByTimeSlot(day, timeSlotId);
+                case 3 -> day.editHaircutPriceByTimeSlot(day, timeSlotId);
+                case 4 -> {
+                    System.out.println("Returning to main menu");
+                    runFirstMenu();
+                }
+                default -> {
+                    System.out.print("This is not a valid choice. Please try again!");
+                    editBooking(day);
+                }
             }
-            default -> {
-                System.out.print("This is not a valid choice. Please try again! ");
-                editBooking(day);
-            }
+        } else {
+            System.out.print("You will be redirected to the previous menu\n");
+            runFirstMenu();
         }
+
     }
 
-    private void editProductList(Day day) {
-        int timeSlotId;
-
-        System.out.print("\nIn what time slot do you want to edit the product list? Please write here: ");
-        timeSlotId = chooseTimeSlot();
-        day.checkBookingInEditBooking(day, timeSlotId);
+    private void editProductList(Day day, int timeSlotId) {
 
         Menu menu = new Menu("\nWould you like to: ", new String[] {
                 "1. Add a product to the list",
@@ -283,8 +291,8 @@ public class BookingSystem {
                 runFirstMenu();
             }
             default -> {
-                System.out.print("This is not a valid choice. Please try again! ");
-                editProductList(day);
+                System.out.print("This is not a valid choice. Please try again!");
+                editProductList(day, timeSlotId);
             }
         }
     }
@@ -296,30 +304,6 @@ public class BookingSystem {
         Day endDate = enterDate();
         calender.registerHolidays(startDate,endDate);
         System.out.println("Closed period registered: " + startDate.toString() + " - " +endDate.toString());
-    }
-
-    private void editCustomerName(Day day) {
-        int timeSlotId;
-
-        System.out.print("\nIn what time slot do you want to edit the name? Please write here: ");
-        timeSlotId = chooseTimeSlot();
-
-        day.editCustomerNameByTimeSlot(day,timeSlotId);
-        //System.out.println("Here is the updated day: \n");
-        //day.showDay();
-    }
-
-    private void editHaircutPrice(Day day) {
-        int timeSlotId;
-
-        System.out.print("\nIn what time slot do you want to see the haircut price? Please write here: ");
-
-        timeSlotId = chooseTimeSlot();
-
-        day.editHaircutPriceByTimeSlot(day, timeSlotId);
-        //day.displayBookingList();
-        //System.out.println("Here is the updated day: \n");
-        //runBookingMenu(day);
     }
 
     private void closeProgram(){// code was used a lot so made a method.
