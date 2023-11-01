@@ -19,6 +19,7 @@ public class Day {
             registerClosedDay(); // if it's a weekend then it closes the bookings
         } catch (DateTimeException e) {
             this.date = null;
+
             System.out.println("This Date does not exist. Try again with a new date.");
         }
     }
@@ -36,6 +37,16 @@ public class Day {
             System.out.println(booking.toString() + "\n");
         }
         System.out.println("___________________");
+    }
+  
+  public int getDay(){
+        return date.getDayOfMonth();
+    }
+    public int getMonth(){
+        return date.getMonthValue();
+    }
+    public int getYear(){
+        return date.getYear();
     }
 
     public LocalDate getDate() {
