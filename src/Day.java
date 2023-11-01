@@ -7,7 +7,6 @@ import java.util.Scanner;
 
 public class Day {
     private LocalDate date;
-    Calender calender = new Calender("Harry's calender");
     private ArrayList<Booking> bookings = new ArrayList<Booking>(8);
     private ArrayList<Product> availableProducts = new ProductBuilder().getProducts();
     private boolean holiday;
@@ -28,6 +27,7 @@ public class Day {
             System.out.println("Please only enter years between 2000 - 2030");}
     }
 
+/*
     //_________________________________________________________________________________________
 
     //!\\ For the hardcoded day again
@@ -38,45 +38,7 @@ public class Day {
         }
         return randomProducts;
     }
-
-    // *******************************************************
-
-    //!\\ ADDING a hardcoded day to check out when check past dates details!
-    public void addHardcodedDay() {
-        Day hardcodedDay = new Day(3, 3, 2020);
-        Customer hardcodedCustomer = new Customer("H. Uman");
-        ArrayList<Booking> hardcodedBookings = new ArrayList<>();
-        hardcodedBookings.add(new Booking(1, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
-        hardcodedBookings.add(new Booking(2, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
-        hardcodedBookings.add(new Booking(3, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
-        hardcodedBookings.add(new Booking(4, hardcodedDay, hardcodedCustomer, 99, randomProducts()));
-        hardcodedBookings.add(new Booking(5, hardcodedDay, hardcodedCustomer, 99, randomProducts()));
-        hardcodedBookings.add(new Booking(6, hardcodedDay, hardcodedCustomer, 246, randomProducts()));
-        hardcodedBookings.add(new Booking(7, hardcodedDay, hardcodedCustomer, 567, randomProducts()));
-        hardcodedBookings.add(new Booking(8, hardcodedDay, hardcodedCustomer, 123, randomProducts()));
-
-        calender.addDay(hardcodedDay);
-        hardcodedDay.setBookings(hardcodedBookings);
-
-        System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---");
-        // Forklaring på hvilket hardcoded dato der er at tjekke hvis man vil kunne se noget spændende
-        // ellers er der nemlig kun tomme days med tomme bookings fordi vi ikke kan add en booking for
-        // en dag før dagen dag.
-        System.out.println("Please note that until we have the ability to keep dates in file,");
-        System.out.println("with the methods used and choices made AND/OR the fact that it would require");
-        System.out.println("a few days to do this authentically we are not really able to see");
-        System.out.println("real past dates that have been added before today's date");
-        System.out.println("Therefore we have provided a past date hardcoded as a dummy date");
-        System.out.println("so that you teachers can test the program without being cheated from ");
-        System.out.println("the accountant's perspective");
-        System.out.println();
-        System.out.println("The hardcoded date to check is the 03-03-2020");
-        System.out.println("But feel free to also check other dates out too, they are just boring as they");
-        System.out.println("are empty by default.");
-        System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---\n");
-    }
-
-    //_________________________________________________________________________________________
+*/
 
 
     private void initializeBookings() {
@@ -110,6 +72,8 @@ public class Day {
     public void closeDay(){
         this.bookings.clear();
     }
+
+
     public String[] buildClosedMessage() {                   //booking listen er 0 for lukkede dage, derfor kan den ikke bruges
         String[] closedMessage = new String[8];              //til at definerer størrelsen på beskeden. Kan give fejl i fremtiden,
         for (int i = 0; i < closedMessage.length; i++) {     //hvis størrelsen på listen ændres, fx med flere tider.
@@ -137,7 +101,7 @@ public class Day {
         Scanner userInput = new Scanner(System.in);
         String customerName;
         double haircutPrice;
-        String userChoice;
+/*        String userChoice;*/
         int arrayId = timeslotId -1;
 
         if (timeslotId >= 1 && timeslotId <= 8) {
@@ -334,7 +298,7 @@ public class Day {
                     deleteProductsFromBooking(booking);
                 }
             } else {
-                System.out.println("The chosen product is not a part of the list");
+                System.out.println("You have now removed the product from the booking.");
             }
         }
 
@@ -348,9 +312,10 @@ public class Day {
     public void setBookings(ArrayList<Booking> bookings) {
         this.bookings = bookings;
     }
-    public ArrayList<Product> getAvailableProducts() {
-        return availableProducts;
-    }
+
+
+
+
 
     public String[] buildOpenDayMessage(){
         String[] dayCalender = new String[bookings.size()];

@@ -6,7 +6,7 @@ public class Booking {
     private String timeSlot;
     private Customer customer;
     private double haircutPrice;
-    private double productPrice = 0;
+    private double productPrice;
     private double bookingTotal;
     private Day day;
     private ArrayList<Product> products = new ArrayList<Product>();
@@ -16,6 +16,7 @@ public class Booking {
         this.day = day;
         this.customer = new Customer(null);
         this.haircutPrice = 0;
+        this.bookingTotal = calcTotal();
 
         switch (id) {
             case 1 -> this.setTimeSlot("10:00 - 11:00");
@@ -36,6 +37,7 @@ public class Booking {
         this.customer = customer;
         this.haircutPrice = haircutPrice;
         this.products = products;
+        this.bookingTotal = calcTotal();
 
         switch (id) {
             case 1 -> this.setTimeSlot("10:00 - 11:00");
@@ -49,10 +51,12 @@ public class Booking {
         }
     }
 
+/*
 
     public int getId() {
         return id;
     }
+*/
 
     public String getTimeSlot() {
         return timeSlot;
@@ -74,9 +78,9 @@ public class Booking {
         customer.setName(name);
     }
 
-    public void setCustomer(Customer customer) {
+/*    public void setCustomer(Customer customer) {
         this.customer = customer;
-    }
+    }*/
 
     public double getHaircutPrice() {
         return haircutPrice;
@@ -98,8 +102,7 @@ public class Booking {
         return products;
     }
 
-    public double calcProductPrice(){
-
+/*    public double calcProductPrice(){
             return productPrice;
     }
 
@@ -107,21 +110,26 @@ public class Booking {
         this.products = products;
     }
 
-    public void setBookingTotal(int Total) {
-        this.bookingTotal = Total;
-    }
+*/
 
     public double calcTotal() {
+        productPrice = 0;
         if (!this.getProducts().isEmpty()) {
             for (Product product : this.getProducts()) {
-                productPrice = productPrice + product.getPrice();
+                productPrice += product.getPrice();
             }
             bookingTotal = haircutPrice + productPrice;
         } else {
             bookingTotal = haircutPrice;
         }
+         return bookingTotal;
+    }
+
+
+    public double getBookingTotal() {
         return bookingTotal;
     }
+
 
 
     @Override
