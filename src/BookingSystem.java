@@ -62,52 +62,6 @@ public class BookingSystem {
         }
     }
 
-/*    private Day enterDate() {
-        int day = 0; // Initialize to default values
-        int month = 0; // Initialize to default values
-        int year = 0; // Initialize to default values
-
-   *//*     do {
-            try {
-                System.out.print("\nPlease give the day in format 'DD': ");
-                day = in.nextInt();
-                in.nextLine(); // Consume the newline character left in the buffer
-
-                if (day < 1 || day > 31) {
-                    System.out.println("Invalid day. Please ensure the day is between 1 and 31.");
-                    continue; // Invalid day, loop again
-                }
-
-                System.out.print("Please give the month in format 'MM': ");
-                month = in.nextInt();
-                in.nextLine(); // Consume the newline character left in the buffer
-
-                if (month < 1 || month > 12) {
-                    System.out.println("Invalid month. Please ensure the month is between 1 and 12.");
-                    continue; // Invalid month, loop again
-                }
-
-                System.out.print("Please give the year in format 'YYYY': ");
-                year = in.nextInt();
-                in.nextLine(); // Consume the newline character left in the buffer
-
-                if (year < 2000 || year > 2030) {
-                    System.out.println("Invalid year. Please ensure the year is between 2000 and 2030.");
-                    continue; // Invalid year, loop again
-                }
-
-                System.out.println(" "); // New line for better view when printing the day
-
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter numeric values for the date.");
-                in.nextLine(); // Clear the input buffer
-            }
-        } while (true); // Run indefinitely until a valid date is entered*//*
-
-
-    }*/
-
-
     private Day enterDate() {
         int day = 0;
         int month = 0;
