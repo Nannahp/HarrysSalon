@@ -28,56 +28,15 @@ public class Day {
             System.out.println("Please only enter years between 2000 - 2030");}
     }
 
-    //_________________________________________________________________________________________
-
-    //!\\ For the hardcoded day again
-    public ArrayList<Product> randomProducts() {
-        ArrayList<Product> randomProducts = new ArrayList<>();
-        for (int i = 0; i < (int)(Math.random() * 3) + 1; i++) {
-            randomProducts.add(ProductBuilder.getProducts().get((int)(Math.random() * 5) + 1));
-        }
-        return randomProducts;
+    public int getDay(){
+        return date.getDayOfMonth();
     }
-
-    // *******************************************************
-
-    //!\\ ADDING a hardcoded day to check out when check past dates details!
-    public void addHardcodedDay() {
-        Day hardcodedDay = new Day(3, 3, 2020);
-        Customer hardcodedCustomer = new Customer("H. Uman");
-        ArrayList<Booking> hardcodedBookings = new ArrayList<>();
-        hardcodedBookings.add(new Booking(1, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
-        hardcodedBookings.add(new Booking(2, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
-        hardcodedBookings.add(new Booking(3, hardcodedDay, hardcodedCustomer, 345, randomProducts()));
-        hardcodedBookings.add(new Booking(4, hardcodedDay, hardcodedCustomer, 99, randomProducts()));
-        hardcodedBookings.add(new Booking(5, hardcodedDay, hardcodedCustomer, 99, randomProducts()));
-        hardcodedBookings.add(new Booking(6, hardcodedDay, hardcodedCustomer, 246, randomProducts()));
-        hardcodedBookings.add(new Booking(7, hardcodedDay, hardcodedCustomer, 567, randomProducts()));
-        hardcodedBookings.add(new Booking(8, hardcodedDay, hardcodedCustomer, 123, randomProducts()));
-
-        calender.addDay(hardcodedDay);
-        hardcodedDay.setBookings(hardcodedBookings);
-
-        System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---");
-        // Forklaring på hvilket hardcoded dato der er at tjekke hvis man vil kunne se noget spændende
-        // ellers er der nemlig kun tomme days med tomme bookings fordi vi ikke kan add en booking for
-        // en dag før dagen dag.
-        System.out.println("Please note that until we have the ability to keep dates in file,");
-        System.out.println("with the methods used and choices made AND/OR the fact that it would require");
-        System.out.println("a few days to do this authentically we are not really able to see");
-        System.out.println("real past dates that have been added before today's date");
-        System.out.println("Therefore we have provided a past date hardcoded as a dummy date");
-        System.out.println("so that you teachers can test the program without being cheated from ");
-        System.out.println("the accountant's perspective");
-        System.out.println();
-        System.out.println("The hardcoded date to check is the 03-03-2020");
-        System.out.println("But feel free to also check other dates out too, they are just boring as they");
-        System.out.println("are empty by default.");
-        System.out.println("---DISCLAIMER---DISCLAIMER---DISCLAIMER---\n");
+    public int getMonth(){
+        return date.getMonthValue();
     }
-
-    //_________________________________________________________________________________________
-
+    public int getYear(){
+        return date.getYear();
+    }
 
     private void initializeBookings() {
         for (int i = 1; i < 9; i++) {
