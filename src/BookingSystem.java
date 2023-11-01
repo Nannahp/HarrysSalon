@@ -15,7 +15,7 @@ public class BookingSystem {
     public void run() {
         addHardcodedDay();
         showIntroMessage();
-        //runLogin();
+        runLogin();
         while(systemRunning){runFirstMenu();}
     }
 
