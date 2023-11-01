@@ -2,6 +2,7 @@ import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -104,10 +105,17 @@ public class Day {
             customerName = userInput.nextLine();
             currentBookings.get(arrayId).getCustomer().setName(customerName);
 
-            System.out.print("What is the price of the haircut: ");
-            haircutPrice = userInput.nextInt();
-            currentBookings.get(arrayId).setHaircutPrice(haircutPrice);
-
+            boolean validInput = false;
+            while (!validInput) {
+                try {
+                    System.out.print("What is the price of the haircut: ");
+                    haircutPrice = userInput.nextInt();
+                    validInput = true; // Input is valid, exit the loop
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                    userInput.next(); // Clear the invalid input
+                }
+            }
             System.out.println();
             System.out.println("This is your booking:");
             System.out.println(this.getBookings().get(arrayId).toString());
