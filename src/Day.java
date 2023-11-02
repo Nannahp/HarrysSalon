@@ -94,7 +94,7 @@ public class Day {
         System.out.println("Adding booking to timeslot");
         Scanner userInput = new Scanner(System.in);
         String customerName;
-        double haircutPrice;
+        double haircutPrice = 0;
         int arrayId = timeslotId -1;
 
         if (timeslotId >= 1 && timeslotId <= 8) {
@@ -116,6 +116,8 @@ public class Day {
                     userInput.next(); // Clear the invalid input
                 }
             }
+            currentBookings.get(arrayId).setHaircutPrice(haircutPrice);
+
             System.out.println();
             System.out.println("This is your booking:");
             System.out.println(this.getBookings().get(arrayId).toString());
@@ -137,7 +139,7 @@ public class Day {
                 System.out.print("Please write the name you want to change to: ");
                 String newName = in.nextLine();
                 bookingToEdit.setCustomerName(newName);
-                System.out.print("The name has been updated. Here are the new booking details: ");
+                System.out.println("The name has been updated. Here are the new booking details: ");
                 System.out.println(day.getBookings().get(id-1).toString());
             } else {
                 System.out.println("It seems that there is no booking in this time slot. Please look at\n " +
@@ -177,7 +179,7 @@ public class Day {
             Customer customer = booking.getCustomer();
 
             if (customer.getName() != null) {
-                System.out.print("Here are the current booking details: ");
+                System.out.println("Here are the current booking details: ");
                 System.out.println(day.getBookings().get(id-1).toString());
                 return true;
             } else {

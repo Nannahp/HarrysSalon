@@ -12,11 +12,18 @@ public class BookingSystem {
     public static void main(String[] args) {
         new BookingSystem().run();
     }
+    public Menu openDayMenu = new Menu("Now you have the following choices: ", new String[]{
+            "1. Choose a timeslot",  "2. Go to one of the following dates",
+            "3. Go back to main menu"
+    });
 
-    public Menu bookingMenu = new Menu("Now you have the following choices: ", new String[]{
-            "1. Add a booking to current day", "2. Delete a booking to current day",
-            "3. Edit a booking to current day", "4. Go to one of the following dates",
-            "5. Go back to main menu"
+    public Menu bookingOptionMenu = new Menu("Now you have the following choices: ", new String[]{
+            "1. Add a booking to timeslot",
+            "2. Go back to main menu"
+    });
+    public Menu editOptionMenu = new Menu("Now you have the following choices: ", new String[]{
+            "1. Edit booking","2. Delete booking",
+            "3. Go back to main menu"
     });
     public Menu closedMenu = new Menu("Now you have the following choices: ", new String[]{
             "1. Go to one of the following dates", "2. Go back to main menu"
@@ -180,7 +187,7 @@ public class BookingSystem {
         if (day.getWeekend() || day.getHoliday()) {
             runClosedDayMenu(day);
         } else {
-            runBookingMenu(day);
+            runOpenDayMenu(day);
 
         }
     }
@@ -229,20 +236,44 @@ public class BookingSystem {
             }
         }
     }
+    private void runOpenDayMenu(Day day){
+        System.out.println("\nYou are currently on " + day.toString());
+        openDayMenu.printMenu();
+        System.out.print("Please write your choice here: ");
+        int userChoice = openDayMenu.readChoice();
+
+        switch (userChoice){
+            case 1 -> runBookingMenu(day);
+            case 2 -> goToAnotherDate(day);
+            case 3-> runMainMenu();
+        }
+
+    }
+
+
 
     //Method after selected date to either add, delete or edit bookings
     private void runBookingMenu(Day day) {
-        System.out.println("\nYou are currently on " + day.toString());
-        bookingMenu.printMenu();
-        System.out.print("Please write your choice here: ");
-        int userChoice = bookingMenu.readChoice();
+        int timeslotId;
+
+        System.out.print("\nWhat time slot do you want to edit? Please write here: ");
+        try {
+            timeslotId = chooseTimeSlot();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a valid time slot.");
+            in.nextLine(); // Clear the input buffer
+            return;
+        }
+        //String customerName = day.getBookings().get(timeslotId-1).getCustomer().getName();
+        boolean bookingExist = day.checkBookingInEditBooking(day, timeslotId);
+        if (!bookingExist) {
+            bookingOptionMenu.printMenu();
+            System.out.print("Please write your choice here: ");
+            int userChoice = bookingOptionMenu.readChoice();
 
         switch (userChoice) {
-            case 1 -> addBooking(day);
-            case 2 -> deleteBooking(day);
-            case 3 -> editBooking(day);
-            case 4 -> goToAnotherDate(day);
-            case 5 -> {
+            case 1 -> addBooking(day,timeslotId);
+            case 2 -> {
                 System.out.println("Returning to the main menu");
                 runMainMenu();
             }
@@ -251,6 +282,25 @@ public class BookingSystem {
                 runBookingMenu(day);
             }
         }
+
+        }else {
+            editOptionMenu.printMenu();
+            System.out.print("Please write your choice here: ");
+            int userChoice = editOptionMenu.readChoice();
+            switch (userChoice) {
+                case 1 -> editBooking(day,timeslotId);
+                case 2 -> deleteBooking(day,timeslotId);
+                case 3 -> {
+                    System.out.println("Returning to the main menu");
+                    runMainMenu();
+                }
+                default -> {
+                    System.out.print("This is not a valid choice. Please try again!\n");
+                    runBookingMenu(day);
+                }
+            }
+        }
+
     }
 
     //Method for accountants
@@ -296,35 +346,20 @@ public class BookingSystem {
         return timeslotId;
     }
 
-    private void addBooking(Day day) {
-        int timeslotId;
-
-        System.out.print("\nIn what time slot do you want to add a booking? Please write here: ");
-        try {
-            timeslotId = chooseTimeSlot();
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter a valid time slot.");
-            in.nextLine(); // Clear the input buffer
-            addBooking(day);
-            return;
-        }
-        day.addBookingToTimeSlot(timeslotId);
+    private void addBooking(Day day, int timeSlotId) {
+        day.addBookingToTimeSlot(timeSlotId);
 
         System.out.println("Here is the updated day: \n");
         calender.showCalender(day);
-        runBookingMenu(day);
+        runOpenDayMenu(day);
     }
 
-    private void deleteBooking(Day day) {
-        int timeslotId;
-
-        System.out.print("\nIn what time slot do you want to delete a booking? Please write here: ");
-        timeslotId = chooseTimeSlot();
-        day.deleteBookingByTimeSlot(timeslotId);
+    private void deleteBooking(Day day, int timeSlotId) {
+        day.deleteBookingByTimeSlot(timeSlotId);
 
         System.out.println("Here is the updated day: \n");
         calender.showCalender(day);
-        runBookingMenu(day);
+        runOpenDayMenu(day);
     }
 
     private void seeBookingDetail(Day day) {
@@ -337,12 +372,8 @@ public class BookingSystem {
     }
 
     //Method for editing bookings
-    private void editBooking(Day day) {
-        int timeSlotId;
+    private void editBooking(Day day, int timeSlotId) {
         boolean checkBooking;
-
-        System.out.print("\nIn what timeslot do you want to edit a booking? Please write here: ");
-        timeSlotId = chooseTimeSlot();
         checkBooking = day.checkBookingInEditBooking(day, timeSlotId);
 
         if (checkBooking == true) {
@@ -355,7 +386,7 @@ public class BookingSystem {
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a valid menu choice.");
                 in.nextLine(); // Clear the input buffer
-                editBooking(day);
+                editBooking(day, timeSlotId);
                 return;
             }
 
@@ -369,13 +400,13 @@ public class BookingSystem {
                 }
                 default -> {
                     System.out.print("This is not a valid choice. Please try again!");
-                    editBooking(day);
+                    editBooking(day, timeSlotId);
                 }
             }
         } else {
             System.out.print("You will be redirected to the previous menu\n");
-            runMainMenu();
-        }
+            sendToFutureMenu(day);
+        } sendToFutureMenu(day);
     }
 
     private void editProducts(Day day, int timeSlotId) {
