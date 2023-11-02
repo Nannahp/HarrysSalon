@@ -125,8 +125,7 @@ public class Day {
                 bookingToEdit.setCustomerName(newName);
                 System.out.print("The name has been updated. Here are the new booking details: ");
                 System.out.println(day.getBookings().get(id-1).toString());
-            } else {
-                System.out.println("It seems that there is no booking in this time slot. Please look at\n " +
+            } else {System.out.println("It seems that there is no booking in this time slot. Please look at\n " +
                         "the updated day and see if you meant another time slot\n");
             }
         } else {System.out.print("This is not a valid time slot. Please try again");}
@@ -193,10 +192,7 @@ public class Day {
         String userChoice;
         ArrayList<Product> products = booking.getProducts();
 
-        System.out.println("Here is a list of all the products available:");
-        for (Product product : availableProducts) {
-            System.out.println(product.getId() + ": " + product.getName());
-        }
+        listOfAvailableProducts();
         System.out.print("What product do you want to add to the booking? Please write here: ");
         chosenProductId = userInput.nextInt();
 
@@ -229,31 +225,35 @@ public class Day {
         }
     }
 
-    public void deleteProductsFromBooking(Booking booking) {
-        Scanner in = new Scanner(System.in);
-        int chosenProductId;
-        String userChoice;
-        ArrayList<Product> products = booking.getProducts();
-
+    private void listOfAvailableProducts() {
         System.out.println("Here is a list of all the products available with their id number:");
         for (Product product : availableProducts) {
             System.out.println(product.getId() + ": " + product.getName());
         }
+    }
+
+    public void deleteProductsFromBooking(Booking booking) {
+        int chosenProductId;
+        String userChoice;
+        ArrayList<Product> products = booking.getProducts();
+
+        listOfAvailableProducts();
         System.out.print("What product do you want to delete from the booking? Please write here: ");
-        chosenProductId = in.nextInt(); in.nextLine(); //Scanner bug
+        chosenProductId = in.nextInt();
+        in.nextLine(); //Scanner bug
 
             for (Product product : availableProducts) {
                 if (chosenProductId == product.getId() && chosenProductId >= 1 && chosenProductId <= 8) {
                     if (products.contains(product)) {
                         products.remove(product);
                         remainingBookingProducts(products);
-                        if (products.size() == 0) {
+                        if (products.isEmpty()) {
                             System.out.println("You will be redirected to main menu as there are no more products left");
                         } else {System.out.print("Would you like to delete another products from the list? y/n: ");
                         userChoice = in.nextLine();
-                        if (userChoice.equalsIgnoreCase("y")) {
-                            deleteProductsFromBooking(booking);
-                        }
+                            if (userChoice.equalsIgnoreCase("y")) {
+                                deleteProductsFromBooking(booking);
+                            }
                         }
                     } else {System.out.println("This product is not available in this booking. Please try again!");
                         deleteProductsFromBooking(booking);
@@ -281,8 +281,7 @@ public class Day {
 
             if ( customerName== null) { //booking has no customer yet
                 dayCalender[i] = ( i+10 + ": Available  ");
-            } else {
-                dayCalender[i] = (i + 10 +": Booked     ");
+            } else {dayCalender[i] = (i + 10 +": Booked     ");
             }
         }
         return dayCalender;
