@@ -39,7 +39,7 @@ public class BookingSystem {
             "4. Go back to main menu"
             //"4. Change payment method"
     });
-    public Menu editProducts = new Menu("\nWould you like to: ", new String[]{
+    public Menu editProductsMenu = new Menu("\nWould you like to: ", new String[]{
             "1. Add a product to the list", "2. Remove a product from the list",
             "3. Go back to main menu"
     });
@@ -359,7 +359,7 @@ public class BookingSystem {
         boolean checkBooking;
         checkBooking = day.checkBookingInEditBooking(day, timeSlotId);
 
-        if (checkBooking == true) {
+        if (checkBooking) {
             editBookingMenu.printMenu();
             System.out.print("Please write your choice here: ");
             int userChoice;
@@ -392,16 +392,16 @@ public class BookingSystem {
     }
 
     private void editProducts(Day day, int timeSlotId) {
-        editProducts.printMenu();
+        editProductsMenu.printMenu();
         System.out.print("Please write your choice here: ");
-        int userChoice = editProducts.readChoice();
+        int userChoice = editProductsMenu.readChoice();
 
         switch (userChoice) {
-            case 1 -> {day.addProductsToBooking(day.getBookings().get(timeSlotId - 1));
+            case 1 -> {day.chooseProductToAddToBooking(day.getBookings().get(timeSlotId - 1));
                 System.out.print("The product list has been updated. Here are the new booking details: ");
                 System.out.println(day.getBookings().get(timeSlotId - 1).toString());
             }
-            case 2 -> {day.deleteProductsFromBooking(day.getBookings().get(timeSlotId - 1));
+            case 2 -> {day.chooseProductToRemoveFromBooking(day.getBookings().get(timeSlotId - 1));
                 System.out.print("The product list has been updated. Here are the new booking details: ");
                 System.out.println(day.getBookings().get(timeSlotId - 1).toString());
             }
