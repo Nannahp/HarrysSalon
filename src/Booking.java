@@ -85,10 +85,6 @@ public class Booking {
         return day;
     }
 
-    public void setDay(Day day) {
-        this.day = day;
-    }
-
     public ArrayList<Product> getProducts() {
         return products;
     }
@@ -111,14 +107,6 @@ public class Booking {
         }
         return bookingTotal;
     }
-
-
-
-    public double getBookingTotal() {
-        return bookingTotal;
-    }
-
-
 
     @Override
     public String toString() {
@@ -154,5 +142,4 @@ public class Booking {
         }
         return sb.toString();
     }
-
 }
