@@ -91,7 +91,7 @@ public class BookingSystem {
         }
     }
 
-    private Day enterDate() {
+    /*private Day enterDate() {
         int day = 0;
         int month = 0;
         int year = 0;
@@ -136,11 +136,98 @@ public class BookingSystem {
         return calender.searchForDate(day, month, year);
     }
 
+*/
+    // returns a Day based on user input
+    private Day enterDate() {
+        int day = 0;
+        int month = 0;
+        int year = 0;
+
+        while (year == 0) {
+            int inputDay = getValidDay();
+            int inputMonth = getValidMonth();
+            int inputYear = getValidYear();
+
+            day = inputDay;
+            month = inputMonth;
+            year = inputYear;
+        }
+        Day dateSearchedFor = calender.searchForDate(day, month, year);
+        if(dateSearchedFor != null){
+            return calender.searchForDate(day, month, year);}
+        else return enterDate();
+    }
+
+    private int getValidDay() {
+        int day = 0;
+        do {
+            try {
+                System.out.print("Please give the day in format 'DD': ");
+                int inputDay = in.nextInt();
+                in.nextLine(); //Scannerbug
+
+                if (inputDay < 1 || inputDay > 31) {
+                    System.out.println("Invalid day. Please ensure the day is between 1 and 31.");
+                    continue; // Invalid day, loop again
+                }
+                day = inputDay;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter numeric values for the day.");
+                in.nextLine(); //Scannerbug
+            }
+        } while (day == 0);
+        return day;
+    }
+
+    private int getValidMonth() {
+        int month = 0;
+        do {
+            try {
+                System.out.print("Please give the month in format 'MM': ");
+                int inputMonth = in.nextInt();
+                in.nextLine(); // Scannerbug
+
+                if (inputMonth < 1 || inputMonth > 12) {
+                    System.out.println("Invalid month. Please ensure the month is between 1 and 12.");
+                    continue; // Invalid month, loop again
+                }
+                month = inputMonth;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter numeric values for the month.");
+                in.nextLine(); // Scannerbug
+            }
+        } while (month == 0);
+        return month;
+    }
+
+    private int getValidYear() {
+        int year = 0;
+        do {
+            try {
+                System.out.print("Please give the year in format 'YYYY': ");
+                int inputYear = in.nextInt();
+                in.nextLine(); // Scannerbug
+
+                if (inputYear < 2000 || inputYear > 2030) {
+                    System.out.println("Invalid year. Please ensure the year is between 2000 and 2030.");
+                    continue; // Invalid year, loop again
+                }
+                year = inputYear;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter numeric values for the year.");
+                in.nextLine(); // Scannerbug
+            }
+        } while (year == 0);
+        return year;
+    }
+
+    //Used to determine if the searched date is in the past
     private boolean isDateBeforeToday(Day day) {
         isBeforeToday = day.getDate().isBefore(LocalDate.now());
         return isBeforeToday;
     }
 
+    //If date is in the past then send to a menu that handles accounting, else send to a menu that handles future bookings.
     private void sendToCorrectMenu(Day day) {
         isBeforeToday = isDateBeforeToday(day);
         if (isBeforeToday) {
@@ -171,6 +258,7 @@ public class BookingSystem {
         runAccountantMenu(day);
     }
 
+    // Checks if the date is closed, and send to the corresponding  menu.
     private void sendToFutureMenu(Day day) {
         calender.showCalender(day);
         if (day.getWeekend() || day.getHoliday()) {
@@ -185,45 +273,55 @@ public class BookingSystem {
         System.out.println("Current date is closed");
 
         closedMenu.printMenu();
+        handleClosedDayOptions(day);
+
+    }
+
+    private void handleClosedDayOptions(Day day){
         System.out.print("Please write your choice here: ");
         int userChoice = closedMenu.readChoice();
         switch (userChoice) {
             case 1 -> goToAnotherDate(day);
-            case 2 -> {
-                System.out.println("Returning to the main menu");
-                runMainMenu();
-            }
+            case 2 -> returnToMainMenu();
+
             default -> {
                 System.out.print("This is not a valid choice. Please try again!\n");
                 runClosedDayMenu(day);
             }
         }
-    }
 
+    }
+    //Creates 4 days efter the searched day
+    private Day[] createNextDays(Day day){
+        Day[] days = new Day[4];
+        for(int i =0; i<4; i++){
+            days[i] = calender.searchForDate(day.getDay() + (i+1), day.getMonth(), day.getYear());
+        }
+        return days;
+    }
+    // Enables user to jump forward up to 4 days
     private void goToAnotherDate(Day day) {
-        Day day1 = calender.searchForDate(day.getDay() + 1, day.getMonth(), day.getYear());
-        Day day2 = calender.searchForDate(day.getDay() + 2, day.getMonth(), day.getYear());
-        Day day3 = calender.searchForDate(day.getDay() + 3, day.getMonth(), day.getYear());
-        Day day4 = calender.searchForDate(day.getDay() + 4, day.getMonth(), day.getYear());
+        Day[] days = createNextDays(day);
         Menu menu = new Menu("Which date would you like to go to: ", new String[]{
-                "1. " + day1.toString(), "2. " + day2.toString(), "3. " + day3.toString(),
-                "4. " + day4.toString(),
+                "1. " + days[0].toString(), "2. " + days[1].toString(), "3. " + days[2].toString(),
+                "4. " + days[3].toString(),
         });
         menu.printMenu();
         System.out.print("Please write your choice here: ");
         int userChoice = menu.readChoice();
 
         switch (userChoice) {
-            case 1 -> sendToFutureMenu(day1);
-            case 2 -> sendToFutureMenu(day2);
-            case 3 -> sendToFutureMenu(day3);
-            case 4 -> sendToFutureMenu(day4);
+            case 1 -> sendToFutureMenu(days[0]);
+            case 2 -> sendToFutureMenu(days[1]);
+            case 3 -> sendToFutureMenu(days[2]);
+            case 4 -> sendToFutureMenu(days[3]);
             default -> {
                 System.out.print("This is not a valid choice. Please try again!\n");
                 goToAnotherDate(day);
             }
         }
     }
+
     private void runOpenDayMenu(Day day){
         System.out.println("\nYou are currently on " + day.toString());
         openDayMenu.printMenu();
@@ -231,7 +329,7 @@ public class BookingSystem {
         int userChoice = openDayMenu.readChoice();
 
         switch (userChoice){
-            case 1 -> runBookingMenu(day);
+            case 1 -> sendToCorrectBookingMenu(day);
             case 2 -> goToAnotherDate(day);
             case 3-> runMainMenu();
         }
@@ -239,77 +337,87 @@ public class BookingSystem {
     }
 
 
-
-    //Method after selected date to either add, delete or edit bookings
-    private void runBookingMenu(Day day) {
-        int timeslotId;
-
+    private int returnValidTimeSlotId(){
+        int timeSlotId=-1;
+        while(timeSlotId ==-1){
         System.out.print("\nWhat time slot do you want to edit? Please write here: ");
         try {
-            timeslotId = chooseTimeSlot();
+            timeSlotId = convertTimeSlotToID();
         } catch (InputMismatchException e) {
             System.out.println("Invalid input. Please enter a valid time slot.");
-            in.nextLine(); // Clear the input buffer
-            return;
+            in.nextLine(); //Scannerbug
         }
-        //String customerName = day.getBookings().get(timeslotId-1).getCustomer().getName();
+    }
+    return timeSlotId;}
+
+    private void handleAddBookingOptions(Day day, int timeslotId){
+        System.out.print("Please write your choice here: ");
+        int userChoice = bookingOptionMenu.readChoice();
+        switch (userChoice) {
+            case 1 -> addBooking(day,timeslotId);
+            case 2 -> returnToMainMenu();
+            default -> {System.out.print("This is not a valid choice. Please try again!\n");
+                sendToCorrectBookingMenu(day);
+            }
+        }
+    }
+    private void runAddBookingMenu(Day day, int timeslotId) {
+        bookingOptionMenu.printMenu();
+        handleAddBookingOptions(day, timeslotId);
+    }
+
+    private void handleEditBookingOptions(Day day, int timeslotId){
+        System.out.print("Please write your choice here: ");
+        int userChoice = editOptionMenu.readChoice();
+        switch (userChoice) {
+            case 1 -> editBooking(day,timeslotId);
+            case 2 -> deleteBooking(day,timeslotId);
+            case 3 -> returnToMainMenu();
+            default -> {
+                System.out.print("This is not a valid choice. Please try again!\n");
+                sendToCorrectBookingMenu(day);
+            }
+        }
+    }
+    private void runEditBookingMenu(Day day, int timeslotId) {
+        editOptionMenu.printMenu();
+        handleEditBookingOptions(day, timeslotId);
+    }
+
+    //Method after selected date to either add, delete or edit bookings
+    private void sendToCorrectBookingMenu(Day day) {
+        int timeslotId = returnValidTimeSlotId();
+
         boolean bookingExist = day.checkBookingInEditBooking(day, timeslotId);
         if (!bookingExist) {
-            bookingOptionMenu.printMenu();
-            System.out.print("Please write your choice here: ");
-            int userChoice = bookingOptionMenu.readChoice();
-
-            switch (userChoice) {
-                case 1 -> addBooking(day,timeslotId);
-                case 2 -> {
-                    System.out.println("Returning to the main menu");
-                    runMainMenu();
-                }
-                default -> {System.out.print("This is not a valid choice. Please try again!\n");
-                    runBookingMenu(day);
-                }
-            }
+            runAddBookingMenu(day, timeslotId);
 
         }else {
-            editOptionMenu.printMenu();
-            System.out.print("Please write your choice here: ");
-            int userChoice = editOptionMenu.readChoice();
-            switch (userChoice) {
-                case 1 -> editBooking(day,timeslotId);
-                case 2 -> deleteBooking(day,timeslotId);
-                case 3 -> {
-                    System.out.println("Returning to the main menu");
-                    runMainMenu();
-                }
-                default -> {
-                    System.out.print("This is not a valid choice. Please try again!\n");
-                    runBookingMenu(day);
-                }
-            }
+            runEditBookingMenu(day,timeslotId);
         }
 
     }
 
+private void handleAccountantOptions(Day day){
+    System.out.print("Please write your choice here: ");
+    int userChoice = accountantMenu.readChoice();
+
+    switch (userChoice) {
+        case 1 -> seeBookingDetail(day);
+        case 2 -> returnToMainMenu();
+        default -> {System.out.print("This is not a valid choice. Please try again!\n");
+            runAccountantMenu(day);
+        }
+    }
+}
     //Method for accountants
     private void runAccountantMenu(Day day) {
         day.showDay();
         accountantMenu.printMenu();
-
-        System.out.print("Please write your choice here: ");
-        int userChoice = accountantMenu.readChoice();
-
-        switch (userChoice) {
-            case 1 -> seeBookingDetail(day);
-            case 2 -> {System.out.println("Returning to the main menu");
-                runMainMenu();
-            }
-            default -> {System.out.print("This is not a valid choice. Please try again!\n");
-                runAccountantMenu(day);
-            }
-        }
+        handleAccountantOptions(day);
     }
 
-    private int chooseTimeSlot() {
+    private int convertTimeSlotToID() {
         int timeslotId = 0;
         while (timeslotId < 1 || timeslotId > 8) { // if timeslot is before 10 or after 17 then keep trying
             int chosenTimeslot = in.nextInt();
@@ -350,69 +458,83 @@ public class BookingSystem {
         int timeSlotId;
 
         System.out.print("\nIn what timeslot do you want to see the booking details? Please write here: ");
-        timeSlotId = chooseTimeSlot();
+        timeSlotId = convertTimeSlotToID();
 
         System.out.println(day.getBookings().get(timeSlotId - 1).toString());
     }
 
+    private int returnBookingExistOption(){
+        int userChoice = -1;
+        while ( userChoice==-1){
+        try {
+            userChoice = editBookingMenu.readChoice();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a valid menu choice.");
+            in.nextLine(); // Clear the input buffer
+        }
+    }
+    return userChoice;}
+    private void handleBookingExistsOptions(Day day, int timeSlotId){
+        int userChoice = returnBookingExistOption();
+        switch (userChoice) {
+            case 1 -> editProducts(day, timeSlotId);
+            case 2 -> day.editCustomerNameByTimeSlot(day, timeSlotId);
+            case 3 -> day.editHaircutPriceByTimeSlot(day, timeSlotId);
+            case 4 -> returnToMainMenu();
+            default -> {
+                System.out.print("This is not a valid choice. Please try again!");
+                editBooking(day, timeSlotId);
+            }
+        }
+
+    }
     //Method for editing bookings
     private void editBooking(Day day, int timeSlotId) {
-        boolean checkBooking;
-        checkBooking = day.checkBookingInEditBooking(day, timeSlotId);
+        boolean bookningExists;
+        bookningExists = day.checkBookingInEditBooking(day, timeSlotId);
 
-        if (checkBooking) {
+        if (bookningExists) {
             editBookingMenu.printMenu();
             System.out.print("Please write your choice here: ");
-            int userChoice;
+            handleBookingExistsOptions(day,timeSlotId);
 
-            try {
-                userChoice = editBookingMenu.readChoice();
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid menu choice.");
-                in.nextLine(); // Clear the input buffer
-                editBooking(day, timeSlotId);
-                return;
-            }
-
-            switch (userChoice) {
-                case 1 -> editProducts(day, timeSlotId);
-                case 2 -> day.editCustomerNameByTimeSlot(day, timeSlotId);
-                case 3 -> day.editHaircutPriceByTimeSlot(day, timeSlotId);
-                case 4 -> {System.out.println("Returning to the main menu");
-                    runMainMenu();
-                }
-                default -> {
-                    System.out.print("This is not a valid choice. Please try again!");
-                    editBooking(day, timeSlotId);
-                }
-            }
         } else {
             System.out.print("You will be redirected to the previous menu\n");
             sendToFutureMenu(day);
         } sendToFutureMenu(day);
     }
 
-    private void editProducts(Day day, int timeSlotId) {
-        editProductsMenu.printMenu();
-        System.out.print("Please write your choice here: ");
-        int userChoice = editProductsMenu.readChoice();
+private void editProducts(Day day, int timeSlotId) {
+    editProductsMenu.printMenu();
+    System.out.print("Please write your choice here: ");
+    int userChoice = editProductsMenu.readChoice();
 
-        switch (userChoice) {
-            case 1 -> {day.chooseProductToAddToBooking(day.getBookings().get(timeSlotId - 1));
-                System.out.print("The product list has been updated. Here are the new booking details: ");
-                System.out.println(day.getBookings().get(timeSlotId - 1).toString());
-            }
-            case 2 -> {day.chooseProductToRemoveFromBooking(day.getBookings().get(timeSlotId - 1));
-                System.out.print("The product list has been updated. Here are the new booking details: ");
-                System.out.println(day.getBookings().get(timeSlotId - 1).toString());
-            }
-            case 3 -> {System.out.println("Returning to the main menu");
-                runMainMenu();
-            }
-            default -> {System.out.print("This is not a valid choice. Please try again!");
-                editProducts(day, timeSlotId);
-            }
+    switch (userChoice) {
+        case 1 -> addProductToBooking(day, timeSlotId);
+        case 2 -> removeProductFromBooking(day, timeSlotId);
+        case 3 -> returnToMainMenu();
+        default -> {
+            System.out.print("This is not a valid choice. Please try again!");
+            editProducts(day, timeSlotId);
         }
+    }
+}
+
+    private void addProductToBooking(Day day, int timeSlotId) {
+        day.chooseProductToAddToBooking(day.getBookings().get(timeSlotId - 1));
+        System.out.print("The product list has been updated. Here are the new booking details: ");
+        System.out.println(day.getBookings().get(timeSlotId - 1).toString());
+    }
+
+    private void removeProductFromBooking(Day day, int timeSlotId) {
+        day.chooseProductToRemoveFromBooking(day.getBookings().get(timeSlotId - 1));
+        System.out.print("The product list has been updated. Here are the new booking details: ");
+        System.out.println(day.getBookings().get(timeSlotId - 1).toString());
+    }
+
+    private void returnToMainMenu() {
+        System.out.println("Returning to the main menu");
+        runMainMenu();
     }
 
     private void registerHolidays() {
@@ -423,6 +545,7 @@ public class BookingSystem {
         calender.registerHolidays(startDate, endDate);
         System.out.println("Closed period registered: " + startDate.toString() + " - " + endDate.toString());
     }
+
 
     public void addHardcodedDay() {
         Day hardcodedDay = new Day(3, 3, 2020);
