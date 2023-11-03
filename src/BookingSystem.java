@@ -119,7 +119,7 @@ public class BookingSystem {
             try {
                 System.out.print("Please give the day in format 'DD': ");
                 int inputDay = in.nextInt();
-                in.nextLine(); //Scannerbug
+                //                in.nextLine(); // Scannerbug
 
                 if (inputDay < 1 || inputDay > 31) {
                     System.out.println("Invalid day. Please ensure the day is between 1 and 31.");
@@ -128,9 +128,10 @@ public class BookingSystem {
                 day = inputDay;
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter numeric values for the day.");
-                in.nextLine(); //Scannerbug
+                //in.nextLine(); // Scannerbug
             }
         } while (day == 0);
+        in.nextLine(); // Scannerbug
         return day;
     }
     //Ensured that the month input can only be an actual month
@@ -140,7 +141,7 @@ public class BookingSystem {
             try {
                 System.out.print("Please give the month in format 'MM': ");
                 int inputMonth = in.nextInt();
-                in.nextLine(); // Scannerbug
+                //in.nextLine(); // Scannerbug
 
                 if (inputMonth < 1 || inputMonth > 12) {
                     System.out.println("Invalid month. Please ensure the month is between 1 and 12.");
@@ -149,9 +150,10 @@ public class BookingSystem {
                 month = inputMonth;
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter numeric values for the month.");
-                in.nextLine(); // Scannerbug
+                //in.nextLine(); // Scannerbug
             }
         } while (month == 0);
+        in.nextLine(); // Scannerbug
         return month;
     }
     //Ensured that the year input can only be a year between 2000-2030
@@ -161,7 +163,7 @@ public class BookingSystem {
             try {
                 System.out.print("Please give the year in format 'YYYY': ");
                 int inputYear = in.nextInt();
-                in.nextLine(); // Scannerbug
+                //in.nextLine(); // Scannerbug
 
                 if (inputYear < 2000 || inputYear > 2030) {
                     System.out.println("Invalid year. Please ensure the year is between 2000 and 2030.");
@@ -170,9 +172,10 @@ public class BookingSystem {
                 year = inputYear;
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter numeric values for the year.");
-                in.nextLine(); // Scannerbug
+                //in.nextLine(); // Scannerbug
             }
         } while (year == 0);
+        in.nextLine(); // Scannerbug
         return year;
     }
 
@@ -293,6 +296,7 @@ public class BookingSystem {
             case 3-> runMainMenu();
         }
 
+        in.nextLine(); // Scanner bug
     }
 
     //ensures that the timeslotId is valid, such that user cannot input a time slot that does not exist.

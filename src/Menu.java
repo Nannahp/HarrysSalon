@@ -39,6 +39,7 @@ public class Menu {
                 in.nextLine(); // Clear the input buffer
             }
         }
+        in.nextLine(); //Scanner bug
         return choice;
     }
 }
