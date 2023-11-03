@@ -3,24 +3,15 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+// This works
+
+
 public class BookingSystem {
     private Scanner in = new Scanner(System.in);
     Calender calender = new Calender("Harry's calender");
     boolean systemRunning = true;
     private boolean isBeforeToday;
-
-    public static void main(String[] args) {
-        new BookingSystem().run();
-    }
-
-    public void run() {
-        addHardcodedDay();
-        showIntroMessage();
-        runLogin();
-        while (systemRunning) {
-            runMainMenu();
-        }
-    }
+  
     public Menu openDayMenu = new Menu("Now you have the following choices: ", new String[]{
             "1. Choose a timeslot",  "2. Go to one of the following dates",
             "3. Go back to main menu"
@@ -52,6 +43,20 @@ public class BookingSystem {
             "1. Add a product to the list", "2. Remove a product from the list",
             "3. Go back to main menu"
     });
+    public static void main(String[] args) {
+        new BookingSystem().run();
+    }
+
+
+    public void run() {
+        addHardcodedDay();
+        showIntroMessage();
+        runLogin();
+        while (systemRunning) {
+            runMainMenu();
+        }
+    }
+
 
     //Hardcoded intro message before login
     private void showIntroMessage() {
