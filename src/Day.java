@@ -62,7 +62,7 @@ public class Day {
         this.bookings = bookings;
     }
     private void initializeBookings() {
-        for (int i = 1; i < 9; i++) {
+        for (int i = 0; i < 8; i++) {
             bookings.add(new Booking(i, this));
         }
     }
@@ -96,9 +96,9 @@ public class Day {
 
 public void addBookingToTimeSlot(int timeslotId) {
     System.out.println("Adding booking to timeslot");
-    int arrayId = timeslotId - 1;
+    int arrayId = timeslotId;
 
-    if (timeslotId >= 1 && timeslotId <= 8) {
+    if (timeslotId >= 0 && timeslotId <= 7) {
         ArrayList<Booking> currentBookings = this.getBookings();
         Booking currentBooking = currentBookings.get(arrayId);
 
@@ -152,9 +152,9 @@ public void addBookingToTimeSlot(int timeslotId) {
     }
 
     public void editCustomerNameByTimeSlot( int id) {
-        if (id >= 1 && id <= 8) {
+        if (id >= 0 && id <= 7) {
             ArrayList<Booking> currentBookings = this.getBookings();
-            Booking bookingToEdit = currentBookings.get(id - 1);
+            Booking bookingToEdit = currentBookings.get(id);
             if (bookingToEdit.getCustomerName() != null) {
                 System.out.print("Please write the name you want to change to: ");
                 String newName = userInput.nextLine();
@@ -172,9 +172,9 @@ public void addBookingToTimeSlot(int timeslotId) {
 
 
     public void editHaircutPriceByTimeSlot(int id) {
-        if (id >= 1 && id <= 8) {
+        if (id >= 0 && id <= 7) {
             ArrayList<Booking> currentBookings = this.getBookings();
-            Booking bookingToEdit = currentBookings.get(id - 1);
+            Booking bookingToEdit = currentBookings.get(id );
 
             if (bookingToEdit.getHaircutPrice() != 0) {
                 double newPrice = getHaircutPriceInput();
@@ -194,14 +194,14 @@ public void addBookingToTimeSlot(int timeslotId) {
 
 
     public boolean checkBookingInEditBooking(Day day, int id) {
-        if (id >= 1 && id <= 8) {
+        if (id >= 0 && id <= 7) {
             ArrayList<Booking> currentBookings = this.getBookings();
-            Booking booking = currentBookings.get(id - 1);
+            Booking booking = currentBookings.get(id);
             Customer customer = booking.getCustomer();
 
             if (customer.getName() != null) {
                 System.out.println("Here are the current booking details: ");
-                System.out.println(day.getBookings().get(id - 1).toString());
+                System.out.println(day.getBookings().get(id).toString());
                 return true;
             } else {
                 System.out.println("No booking has been found in this timeslot");
@@ -215,9 +215,9 @@ public void addBookingToTimeSlot(int timeslotId) {
     }
 
     public void deleteBookingByTimeSlot(int id) {
-        if (id >= 1 && id <= 8) {
+        if (id >= 0 && id <= 7) {
             ArrayList<Booking> currentBookings = this.getBookings();
-            Booking deletedBooking = currentBookings.get(id - 1);
+            Booking deletedBooking = currentBookings.get(id);
             Customer deletedCustomer = deletedBooking.getCustomer();
 
             if (deletedCustomer.getName() != null) { //Check if the given timeslot is booked
@@ -225,8 +225,8 @@ public void addBookingToTimeSlot(int timeslotId) {
                         deletedBooking.getTimeSlot());
 
                 deletedCustomer.setName(null);
-                currentBookings.get(id - 1).setHaircutPrice(0);
-                currentBookings.get(id - 1).getProducts().clear();
+                currentBookings.get(id).setHaircutPrice(0);
+                currentBookings.get(id).getProducts().clear();
                 System.out.println("The booking has been deleted");
             } else {
                 System.out.println("No booking has been found in this timeslot\n");

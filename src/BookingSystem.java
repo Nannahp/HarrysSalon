@@ -299,7 +299,7 @@ public class BookingSystem {
     private int returnValidTimeSlotId(){
         int timeSlotId=-1;
         while(timeSlotId ==-1){
-        System.out.print("\nWhat time slot do you want to edit? Please write here: ");
+        System.out.print("\nWhat time slot do you want to view? Please write here: ");
         try {
             timeSlotId = convertTimeSlotToID();
         } catch (InputMismatchException e) {
@@ -380,20 +380,20 @@ private void handleAccountantOptions(Day day){
 
     //Convert a user input timeslot to a timeslotID that can be used for ArrayList indexing
     private int convertTimeSlotToID() {
-        int timeslotId = 0;
-        while (timeslotId < 1 || timeslotId > 8) { // if timeslot is before 10 or after 17 then keep trying
+        int timeslotId = -1;
+        while (timeslotId < 0 || timeslotId > 7) { // if timeslot is before 10 or after 17 then keep trying
             int chosenTimeslot = in.nextInt();
             in.nextLine(); //Scanner bug
 
             switch (chosenTimeslot) {
-                case 10 -> timeslotId = 1;
-                case 11 -> timeslotId = 2;
-                case 12 -> timeslotId = 3;
-                case 13 -> timeslotId = 4;
-                case 14 -> timeslotId = 5;
-                case 15 -> timeslotId = 6;
-                case 16 -> timeslotId = 7;
-                case 17 -> timeslotId = 8;
+                case 10 -> timeslotId = 0;
+                case 11 -> timeslotId = 1;
+                case 12 -> timeslotId = 2;
+                case 13 -> timeslotId = 3;
+                case 14 -> timeslotId = 4;
+                case 15 -> timeslotId = 5;
+                case 16 -> timeslotId = 6;
+                case 17 -> timeslotId = 7;
                 default -> System.out.print("This is not a valid time slot. Please enter another time:");
             }
         }
@@ -420,9 +420,9 @@ private void handleAccountantOptions(Day day){
         int timeSlotId;
 
         System.out.print("\nIn what timeslot do you want to see the booking details? Please write here: ");
-        timeSlotId = convertTimeSlotToID();
+        timeSlotId = returnValidTimeSlotId();
 
-        System.out.println(day.getBookings().get(timeSlotId - 1).toString());
+        System.out.println(day.getBookings().get(timeSlotId).toString());
     }
 
     // returns user input of options for editing menu.
@@ -433,7 +433,7 @@ private void handleAccountantOptions(Day day){
             userChoice = editBookingMenu.readChoice();
         } catch (InputMismatchException e) {
             System.out.println("Invalid input. Please enter a valid menu choice.");
-            in.nextLine(); // Clear the input buffer
+            in.nextLine(); // Scannerbug
         }
     }
     return userChoice;}
@@ -443,8 +443,8 @@ private void handleAccountantOptions(Day day){
         int userChoice = returnBookingExistOption();
         switch (userChoice) {
             case 1 -> editProducts(day, timeSlotId);
-            case 2 -> day.editCustomerNameByTimeSlot(day, timeSlotId);
-            case 3 -> day.editHaircutPriceByTimeSlot(day, timeSlotId);
+            case 2 -> day.editCustomerNameByTimeSlot(timeSlotId);
+            case 3 -> day.editHaircutPriceByTimeSlot(timeSlotId);
             case 4 -> returnToMainMenu();
             default -> {
                 System.out.print("This is not a valid choice. Please try again!");
@@ -468,6 +468,7 @@ private void handleAccountantOptions(Day day){
             sendToFutureMenu(day);
         } sendToFutureMenu(day);
     }
+
    // Options for editing product list
 private void editProducts(Day day, int timeSlotId) {
     editProductsMenu.printMenu();
@@ -486,15 +487,15 @@ private void editProducts(Day day, int timeSlotId) {
 }
 
     private void addProductToBooking(Day day, int timeSlotId) {
-        day.chooseProductToAddToBooking(day.getBookings().get(timeSlotId - 1));
+        day.chooseProductToAddToBooking(day.getBookings().get(timeSlotId ));
         System.out.print("The product list has been updated. Here are the new booking details: ");
-        System.out.println(day.getBookings().get(timeSlotId - 1).toString());
+        System.out.println(day.getBookings().get(timeSlotId).toString());
     }
 
     private void removeProductFromBooking(Day day, int timeSlotId) {
-        day.chooseProductToRemoveFromBooking(day.getBookings().get(timeSlotId - 1));
+        day.chooseProductToRemoveFromBooking(day.getBookings().get(timeSlotId));
         System.out.print("The product list has been updated. Here are the new booking details: ");
-        System.out.println(day.getBookings().get(timeSlotId - 1).toString());
+        System.out.println(day.getBookings().get(timeSlotId).toString());
     }
 
     private void returnToMainMenu() {
