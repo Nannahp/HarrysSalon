@@ -25,11 +25,6 @@ public class Day {
         }
     }
 
-    private void initializeBookings() {
-        for (int i = 1; i < 9; i++) {
-            bookings.add(new Booking(i, this));
-        }
-    }
 
     public int getDay() {
         return date.getDayOfMonth();
@@ -47,7 +42,7 @@ public class Day {
         return date;
     }
 
-    public void setHoliday(boolean choice) { //find a better name
+    public void setHoliday(boolean choice) { //can't think of a better variable name for now
         this.holiday = choice;
     }
 
@@ -59,11 +54,22 @@ public class Day {
         return weekend;
     }
 
+    public ArrayList<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(ArrayList<Booking> bookings) {
+        this.bookings = bookings;
+    }
+    private void initializeBookings() {
+        for (int i = 1; i < 9; i++) {
+            bookings.add(new Booking(i, this));
+        }
+    }
     public void closeDay() {
         this.bookings.clear();
     }
-
-
+    //builds a message of 8 lines, such that it can be printet along with an open day with 8 timeslots.
     public String[] buildClosedMessage() {                   //booking listen er 0 for lukkede dage, derfor kan den ikke bruges
         String[] closedMessage = new String[8];              //til at definerer størrelsen på beskeden. Kan give fejl i fremtiden,
         for (int i = 0; i < closedMessage.length; i++) {     //hvis størrelsen på listen ændres, fx med flere tider.
@@ -71,7 +77,7 @@ public class Day {
         }
         return closedMessage;
     }
-
+    //builds a message of 8 lines, such that it can be printet along with an open day with 8 timeslots.
     public String[] buildHolidayMessage() {
         String[] holidayMessage = new String[8];
         for (int i = 0; i < holidayMessage.length; i++) {
@@ -87,44 +93,65 @@ public class Day {
         }
     }
 
-    public void addBookingToTimeSlot(int timeslotId) {
-        System.out.println("Adding booking to timeslot");
-        String customerName;
-        double haircutPrice = 0;
-        int arrayId = timeslotId - 1;
 
-        if (timeslotId >= 1 && timeslotId <= 8) {
-            ArrayList<Booking> currentBookings = this.getBookings();
+public void addBookingToTimeSlot(int timeslotId) {
+    System.out.println("Adding booking to timeslot");
+    int arrayId = timeslotId - 1;
 
-            System.out.println("Booking " + currentBookings.get(arrayId).getDay().toString() + ": " + currentBookings.get(arrayId).getTimeSlot());
-            System.out.print("What is the name of the customer: ");
-            customerName = userInput.nextLine();
-            currentBookings.get(arrayId).getCustomer().setName(customerName);
+    if (timeslotId >= 1 && timeslotId <= 8) {
+        ArrayList<Booking> currentBookings = this.getBookings();
+        Booking currentBooking = currentBookings.get(arrayId);
 
-            boolean validInput = false;
-            while (!validInput) {
-                try {
-                    System.out.print("What is the price of the haircut: ");
-                    haircutPrice = userInput.nextInt();
-                    validInput = true; // Input is valid, exit the loop
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter a valid number.");
-                    userInput.next(); // Clear the invalid input
-                }
-            }
-            currentBookings.get(arrayId).setHaircutPrice(haircutPrice);
+        displayBookingInfo(currentBooking);
 
-            System.out.println();
-            System.out.println("This is your booking:");
-            System.out.println(this.getBookings().get(arrayId).toString());
-            System.out.println("Thank you for adding a booking.");
+        String customerName = getCustomerNameInput();
+        currentBooking.getCustomer().setName(customerName);
 
-        } else {
-            System.out.println("This is not a valid time slot. Try again.");
-        }
+        double haircutPrice = getHaircutPriceInput();
+        currentBooking.setHaircutPrice(haircutPrice);
+
+        displayNewBookingDetails(currentBooking);
+
+        System.out.println("Thank you for adding a booking.");
+    } else {
+        System.out.println("This is not a valid time slot. Try again.");
+    }
+}
+
+    private void displayBookingInfo(Booking booking) {
+        System.out.println("Booking " + booking.getDay().toString() + ": " + booking.getTimeSlot());
     }
 
-    public void editCustomerNameByTimeSlot(Day day, int id) {
+    private String getCustomerNameInput() {
+        System.out.print("What is the name of the customer: ");
+        return userInput.nextLine();
+    }
+
+    private double getHaircutPriceInput() {
+        double haircutPrice = 0.0;
+        boolean validInput = false;
+
+        while (!validInput) {
+            try {
+                System.out.print("What is the price of the haircut: ");
+                haircutPrice = userInput.nextDouble();
+                validInput = true; // Input is valid, exit the loop
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                userInput.nextLine(); // Scannerbug
+                validInput =false;
+            }
+        }
+        return haircutPrice;
+    }
+
+    private void displayNewBookingDetails(Booking booking) {
+        System.out.println();
+        System.out.println("This is your booking:");
+        System.out.println(booking.toString());
+    }
+
+    public void editCustomerNameByTimeSlot( int id) {
         if (id >= 1 && id <= 8) {
             ArrayList<Booking> currentBookings = this.getBookings();
             Booking bookingToEdit = currentBookings.get(id - 1);
@@ -133,7 +160,7 @@ public class Day {
                 String newName = userInput.nextLine();
                 bookingToEdit.setCustomerName(newName);
                 System.out.println("The name has been updated. Here are the new booking details: ");
-                System.out.println(day.getBookings().get(id - 1).toString());
+                System.out.println(bookingToEdit.toString());
             } else {
                 System.out.println("It seems that there is no booking in this time slot. Please look at\n " +
                         "the updated day and see if you meant another time slot\n");
@@ -143,25 +170,28 @@ public class Day {
         }
     }
 
-    public void editHaircutPriceByTimeSlot(Day day, int id) {
+
+    public void editHaircutPriceByTimeSlot(int id) {
         if (id >= 1 && id <= 8) {
             ArrayList<Booking> currentBookings = this.getBookings();
             Booking bookingToEdit = currentBookings.get(id - 1);
+
             if (bookingToEdit.getHaircutPrice() != 0) {
-                System.out.print("Please write the new haircut price here: ");
-                double newPrice = userInput.nextInt();
-                userInput.nextLine(); //Scanner bug
+                double newPrice = getHaircutPriceInput();
+
                 bookingToEdit.setHaircutPrice(newPrice);
-                System.out.print("The haircut price has been updated. Here are the new booking details: ");
-                System.out.println(day.getBookings().get(id - 1).toString());
+
+                displayNewBookingDetails(bookingToEdit);
             } else {
-                System.out.println("It seems that there is no booking in this time slot. Please look at\n " +
-                        "the updated day and see if you meant another time slot\n");
+                System.out.println("It seems that there is no booking in this time slot. Please look at the updated day and see if you meant another time slot.");
             }
         } else {
-            System.out.print("This is not a valid time slot. Please try again");
+            System.out.print("This is not a valid time slot. Please try again.");
         }
     }
+
+
+
 
     public boolean checkBookingInEditBooking(Day day, int id) {
         if (id >= 1 && id <= 8) {
@@ -207,7 +237,6 @@ public class Day {
     }
 
     public void chooseProductToAddToBooking(Booking booking) {
-
         int chosenProductId;
         String userChoice;
         ArrayList<Product> products = booking.getProducts();
@@ -253,24 +282,27 @@ public class Day {
             System.out.println(product.getId() + ": " + product.getName());
         }
     }
+public void removeProducts(ArrayList<Product> products){
+    int chosenProductId;
+    System.out.print("What product do you want to delete from the booking? Please write here: ");
+    chosenProductId = userInput.nextInt();
+    removeProductById(chosenProductId, products);
+    displayBookingProducts(products);
+    userInput.nextLine(); //Scanner bug
 
+}
     public void chooseProductToRemoveFromBooking(Booking booking) {
-        int chosenProductId;
         String userChoice;
         ArrayList<Product> products = updateProductsId(booking.getProducts());
-
-
         displayBookingProducts(products);
-        System.out.print("What product do you want to delete from the booking? Please write here: ");
-        chosenProductId = userInput.nextInt();
-        removeProductById(chosenProductId, products);
-        displayBookingProducts(products);
-        userInput.nextLine(); //Scanner bug
+        if(products.size() !=0){
+        removeProducts(products);
         System.out.print("Would you like to remove more products to the list? y/n: ");
         userChoice = userInput.nextLine();
         if (userChoice.equalsIgnoreCase("y")) {
             chooseProductToRemoveFromBooking(booking);
-        }
+        }}
+        else System.out.println("No products to remove");
     }
 
     private ArrayList<Product> updateProductsId(ArrayList<Product> products) {
@@ -295,15 +327,6 @@ public class Day {
 
     }
 
-
-
-    public ArrayList<Booking> getBookings() {
-        return bookings;
-    }
-
-    public void setBookings(ArrayList<Booking> bookings) {
-        this.bookings = bookings;
-    }
 
     public String[] buildOpenDayMessage() {
         String[] dayCalender = new String[bookings.size()];
