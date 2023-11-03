@@ -237,7 +237,7 @@ public class Day {
         }
     }
 
-    private void addProductsByID(int chosenProductID, ArrayList<Product> products) {
+    public void addProductsByID(int chosenProductID, ArrayList<Product> products) {
         switch (chosenProductID) {
             case 1 -> products.add(new Product(availableProducts.get(0).getId(), availableProducts.get(0).getName(), availableProducts.get(0).getPrice()));
             case 2 -> products.add(new Product(availableProducts.get(1).getId(), availableProducts.get(1).getName(), availableProducts.get(1).getPrice()));

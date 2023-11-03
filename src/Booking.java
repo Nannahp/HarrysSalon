@@ -60,6 +60,7 @@ public class Booking {
     public String getTimeSlot() {
         return timeSlot;
     }
+    public void addProduct(Product product) {products.add(product);}
 
     private void setTimeSlot(String timeSlot) {
         this.timeSlot = timeSlot;
