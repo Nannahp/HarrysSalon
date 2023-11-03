@@ -142,6 +142,7 @@ public void addBookingToTimeSlot(int timeslotId) {
                 validInput =false;
             }
         }
+        userInput.nextLine();//scanner bug
         return haircutPrice;
     }
 
