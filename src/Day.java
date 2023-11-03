@@ -1,4 +1,3 @@
-import java.io.Serializable;
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -29,6 +28,17 @@ public class Day {
     public void initializeBookings() {
         for (int i = 1; i < 9; i++) {
             bookings.add(new Booking(i, this));
+        }
+    }
+
+    public void addBooking(Booking booking, int timeslotID) {
+        if (timeslotID >= 1 && timeslotID <= 8) {
+            int index = timeslotID - 1; // Adjust for 0-based index
+            if (bookings.size() > index) {
+                bookings.set(index, booking); // Replace the existing booking at the time slot
+            } else {
+                bookings.add(booking); // Add a new booking if the index doesn't exist yet
+            }
         }
     }
 
@@ -308,14 +318,30 @@ public class Day {
     public String[] buildOpenDayMessage() {
         String[] dayCalender = new String[bookings.size()];
 
-        for (int i = 0; i < bookings.size(); i++) {
-            Booking booking = bookings.get(i);
+            /*Booking booking = bookings.get(i);
             String customerName = booking.getCustomer().getName();
+            Customer customer = booking.getCustomer();
 
-            if (customerName == null) { //booking has no customer yet
+            if (customerName == null || customer == null) { //booking has no customer yet
                 dayCalender[i] = (i + 10 + ": Available  ");
             } else {
                 dayCalender[i] = (i + 10 + ": Booked     ");
+            }*/
+
+        for (int i = 0; i < dayCalender.length; i++) {
+            Booking booking = bookings.get(i);
+
+            if (booking == null) {
+                dayCalender[i] = (i + 10 + ": Available  ");
+            } else {
+                Customer customer = booking.getCustomer();
+                if (customer == null) {
+                    dayCalender[i] = (i + 10 + ": Available  ");
+                } else {
+                    if (customer.getName() == null || "null".equals(customer.getName())) {
+                        dayCalender[i] = (i + 10 + ": Available  ");
+                    } else {dayCalender[i] = (i + 10 + ": Booked     ");}
+                }
             }
         }
         return dayCalender;
@@ -361,4 +387,5 @@ public class Day {
     public int hashCode() {
         return Objects.hash(date);
     }
+
 }
