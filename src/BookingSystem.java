@@ -91,52 +91,6 @@ public class BookingSystem {
         }
     }
 
-    /*private Day enterDate() {
-        int day = 0;
-        int month = 0;
-        int year = 0;
-
-        do {
-            try {
-                System.out.print("\nPlease give the day in format 'DD': ");
-                int inputDay = in.nextInt();
-                in.nextLine(); // Consume the newline character left in the buffer
-
-                if (inputDay < 1 || inputDay > 31) {
-                    System.out.println("Invalid day. Please ensure the day is between 1 and 31.");
-                    continue; // Invalid day, loop again
-                }
-                day = inputDay;
-
-                System.out.print("Please give the month in format 'MM': ");
-                int inputMonth = in.nextInt();
-                in.nextLine(); // Consume the newline character left in the buffer
-
-                if (inputMonth < 1 || inputMonth > 12) {
-                    System.out.println("Invalid month. Please ensure the month is between 1 and 12.");
-                    continue; // Invalid month, loop again
-                }
-                month = inputMonth;
-
-                System.out.print("Please give the year in format 'YYYY': ");
-                int inputYear = in.nextInt();
-                in.nextLine(); // Consume the newline character left in the buffer
-
-                if (inputYear < 2000 || inputYear > 2030) {
-                    System.out.println("Invalid year. Please ensure the year is between 2000 and 2030.");
-                    continue; // Invalid year, loop again
-                }
-                year = inputYear;
-
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter numeric values for the date.");
-                in.nextLine(); // Clear the input buffer
-            }
-        } while (year == 0); // runs until a valid date is entered
-        return calender.searchForDate(day, month, year);
-    }
-
-*/
     // returns a Day based on user input
     private Day enterDate() {
         int day = 0;
@@ -158,6 +112,7 @@ public class BookingSystem {
         else return enterDate();
     }
 
+    //Ensured that the day input can only be an actual day
     private int getValidDay() {
         int day = 0;
         do {
@@ -178,7 +133,7 @@ public class BookingSystem {
         } while (day == 0);
         return day;
     }
-
+    //Ensured that the month input can only be an actual month
     private int getValidMonth() {
         int month = 0;
         do {
@@ -199,7 +154,7 @@ public class BookingSystem {
         } while (month == 0);
         return month;
     }
-
+    //Ensured that the year input can only be a year between 2000-2030
     private int getValidYear() {
         int year = 0;
         do {
@@ -227,7 +182,8 @@ public class BookingSystem {
         return isBeforeToday;
     }
 
-    //If date is in the past then send to a menu that handles accounting, else send to a menu that handles future bookings.
+    //If date is in the past then send to a menu that handles accounting,
+    //else send to a menu that handles future bookings.
     private void sendToCorrectMenu(Day day) {
         isBeforeToday = isDateBeforeToday(day);
         if (isBeforeToday) {
@@ -277,6 +233,7 @@ public class BookingSystem {
 
     }
 
+    //runs correct option offered for a closed day, based on user input.
     private void handleClosedDayOptions(Day day){
         System.out.print("Please write your choice here: ");
         int userChoice = closedMenu.readChoice();
@@ -299,6 +256,7 @@ public class BookingSystem {
         }
         return days;
     }
+
     // Enables user to jump forward up to 4 days
     private void goToAnotherDate(Day day) {
         Day[] days = createNextDays(day);
@@ -322,6 +280,7 @@ public class BookingSystem {
         }
     }
 
+    //runs correct option offered for an open day, based on user input.
     private void runOpenDayMenu(Day day){
         System.out.println("\nYou are currently on " + day.toString());
         openDayMenu.printMenu();
@@ -336,7 +295,7 @@ public class BookingSystem {
 
     }
 
-
+    //ensures that the timeslotId is valid, such that user cannot input a time slot that does not exist.
     private int returnValidTimeSlotId(){
         int timeSlotId=-1;
         while(timeSlotId ==-1){
@@ -350,6 +309,20 @@ public class BookingSystem {
     }
     return timeSlotId;}
 
+    //sends to correct menu based on if a booking exists
+    private void sendToCorrectBookingMenu(Day day) {
+        int timeslotId = returnValidTimeSlotId();
+        // returns true if a booking is active in that timeslot.
+        boolean bookingExist = day.checkBookingInEditBooking(day, timeslotId);
+        if (!bookingExist) {
+            runAddBookingMenu(day, timeslotId);
+
+        }else {
+            runEditBookingMenu(day,timeslotId);
+        }
+
+    }
+    //runs correct option offered for adding a booking, based on user input.
     private void handleAddBookingOptions(Day day, int timeslotId){
         System.out.print("Please write your choice here: ");
         int userChoice = bookingOptionMenu.readChoice();
@@ -366,6 +339,7 @@ public class BookingSystem {
         handleAddBookingOptions(day, timeslotId);
     }
 
+    //runs correct option offered for editing a booking, based on user input.
     private void handleEditBookingOptions(Day day, int timeslotId){
         System.out.print("Please write your choice here: ");
         int userChoice = editOptionMenu.readChoice();
@@ -384,20 +358,7 @@ public class BookingSystem {
         handleEditBookingOptions(day, timeslotId);
     }
 
-    //Method after selected date to either add, delete or edit bookings
-    private void sendToCorrectBookingMenu(Day day) {
-        int timeslotId = returnValidTimeSlotId();
-
-        boolean bookingExist = day.checkBookingInEditBooking(day, timeslotId);
-        if (!bookingExist) {
-            runAddBookingMenu(day, timeslotId);
-
-        }else {
-            runEditBookingMenu(day,timeslotId);
-        }
-
-    }
-
+// send to correct option of accountant options.
 private void handleAccountantOptions(Day day){
     System.out.print("Please write your choice here: ");
     int userChoice = accountantMenu.readChoice();
@@ -417,6 +378,7 @@ private void handleAccountantOptions(Day day){
         handleAccountantOptions(day);
     }
 
+    //Convert a user input timeslot to a timeslotID that can be used for ArrayList indexing
     private int convertTimeSlotToID() {
         int timeslotId = 0;
         while (timeslotId < 1 || timeslotId > 8) { // if timeslot is before 10 or after 17 then keep trying
@@ -463,6 +425,7 @@ private void handleAccountantOptions(Day day){
         System.out.println(day.getBookings().get(timeSlotId - 1).toString());
     }
 
+    // returns user input of options for editing menu.
     private int returnBookingExistOption(){
         int userChoice = -1;
         while ( userChoice==-1){
@@ -474,6 +437,8 @@ private void handleAccountantOptions(Day day){
         }
     }
     return userChoice;}
+
+    //sends to correct method of editing options
     private void handleBookingExistsOptions(Day day, int timeSlotId){
         int userChoice = returnBookingExistOption();
         switch (userChoice) {
@@ -488,7 +453,7 @@ private void handleAccountantOptions(Day day){
         }
 
     }
-    //Method for editing bookings
+    //runs editing menu
     private void editBooking(Day day, int timeSlotId) {
         boolean bookningExists;
         bookningExists = day.checkBookingInEditBooking(day, timeSlotId);
@@ -503,7 +468,7 @@ private void handleAccountantOptions(Day day){
             sendToFutureMenu(day);
         } sendToFutureMenu(day);
     }
-
+   // Options for editing product list
 private void editProducts(Day day, int timeSlotId) {
     editProductsMenu.printMenu();
     System.out.print("Please write your choice here: ");
