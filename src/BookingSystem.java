@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class BookingSystem {
     String filename = Paths.get(workingDirectory, filenameOnly).toString();
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         new BookingSystem().run();
     }
 
@@ -55,7 +54,7 @@ public class BookingSystem {
             "3. Go back to main menu"
     });
 
-    public void run() {
+    public void run() throws FileNotFoundException {
         createFile(filename);
         loadBookingData();
         //addHardcodedDay();
@@ -84,14 +83,8 @@ public class BookingSystem {
         }
     }
 
-    private void loadBookingData() {
-        try {
-            calender.loadBookingDataFromFile(filename, calender);
-            System.out.println("Booking data loaded successfully.");
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found. Starting with an empty booking system.");
-            // You can choose to handle this differently if needed.
-        }
+    private void loadBookingData() throws FileNotFoundException {
+        calender.loadBookingDataFromFile(filename, calender);
     }
 
     //Hardcoded intro message before login

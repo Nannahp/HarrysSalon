@@ -1,6 +1,4 @@
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Booking {
     private int id;
@@ -52,6 +50,10 @@ public class Booking {
             case 7 -> this.setTimeSlot("16:00 - 17:00");
             case 8 -> this.setTimeSlot("17:00 - 18:00");
         }
+    }
+
+    public Booking(int timeSlot, String name, double haircutPrice) {
+
     }
 
     public int getId() {return this.id; }
