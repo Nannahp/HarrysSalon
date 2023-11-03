@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+// This works
+
+
 public class BookingSystem {
     private Scanner in = new Scanner(System.in);
     Calender calender = new Calender("Harry's calender");
@@ -12,6 +15,7 @@ public class BookingSystem {
     public static void main(String[] args) {
         new BookingSystem().run();
     }
+
     public Menu openDayMenu = new Menu("Now you have the following choices: ", new String[]{
             "1. Choose a timeslot",  "2. Go to one of the following dates",
             "3. Go back to main menu"
