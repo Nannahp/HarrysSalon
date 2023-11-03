@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Serializable;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -8,6 +13,11 @@ public class BookingSystem {
     Calender calender = new Calender("Harry's calender");
     boolean systemRunning = true;
     private boolean isBeforeToday;
+
+    String workingDirectory = System.getProperty("user.dir");
+    String filenameOnly = "/src/BookingSaved.txt";
+    String filename = Paths.get(workingDirectory, filenameOnly).toString();
+
 
     public static void main(String[] args) {
         new BookingSystem().run();
@@ -45,11 +55,41 @@ public class BookingSystem {
     });
 
     public void run() {
-        addHardcodedDay();
+        createFile(filename);
+        loadBookingData();
+        //addHardcodedDay();
         showIntroMessage();
         runLogin();
         while (systemRunning) {
             runMainMenu();
+        }
+        calender.saveBookingDataToFile(filename);
+    }
+
+    private void createFile(String filename) {
+        File file = new File(filename);
+        try {
+            if (file.exists()) {
+                System.out.println("File already exists.");
+            } else {
+                if (file.createNewFile()) {
+                    System.out.println("File created: " + file.getName());
+                } else {
+                    System.out.println("File could not be created.");
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("An error occurred: " + e.getMessage());
+        }
+    }
+
+    private void loadBookingData() {
+        try {
+            calender.loadBookingDataFromFile(filename, calender);
+            System.out.println("Booking data loaded successfully.");
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found. Starting with an empty booking system.");
+            // You can choose to handle this differently if needed.
         }
     }
 
@@ -424,7 +464,7 @@ public class BookingSystem {
     }
 
     public void addHardcodedDay() {
-        Day hardcodedDay = new Day(3, 3, 2020);
+        Day hardcodedDay = new Day(03, 03, 2020);
         Customer hardcodedCustomer = new Customer("H. Uman");
         ArrayList<Booking> hardcodedBookings = new ArrayList<>();
         hardcodedBookings.add(new Booking(1, hardcodedDay, hardcodedCustomer, 345, randomProducts()));

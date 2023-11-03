@@ -1,18 +1,104 @@
 import java.time.LocalDate;
+import java.util.*;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Random;
+
 
 public class Calender {
     String calenderName;
     private ArrayList<Day> days = new ArrayList<>();
 
+
     public Calender(String name) {
         this.calenderName = name;
     }
 
-    public void addDay(Day day) {
-        days.add(day);
+    public void addDay(Day day) {days.add(day);
+    }
+
+    public void saveBookingDataToFile(String fileName) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            for (Day day : days) {
+                for (Booking booking : day.getBookings()) {
+                    StringBuilder bookingDetails = new StringBuilder();
+                    bookingDetails.append(day.getDate())
+                    .append(";")
+                    .append(booking.getId())
+                    .append(";")
+                    .append(String.valueOf(booking.getCustomer().getName()))
+                    .append(";")
+                    .append(booking.getHaircutPrice())
+                    .append(";");
+                    // Save product details (if any)
+                    for (Product product : booking.getProducts()) {
+                        bookingDetails.append(product.getId()).append(";");
+                    }
+                    bookingDetails.append("END");
+                    writer.println(bookingDetails.toString());
+                }
+            }
+            System.out.println("Booking data saved successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Day getDayByDate(LocalDate targetDate) {
+        for (Day day : days) {
+            if (day.getDate().equals(targetDate)) {
+                return day;
+            }
+        }
+        return null; // Return null if no matching Day is found
+    }
+
+
+    public void loadBookingDataFromFile(String fileName, Calender calendar) throws FileNotFoundException {
+        ArrayList<Product> availableProducts = new ProductBuilder().getProducts();
+        ArrayList<Booking> bookings = new ArrayList<>(8);
+        boolean endOfBooking = false;
+        Day currentDay = null;
+
+        try (Scanner scanner = new Scanner(new FileReader(fileName))) {
+            while (scanner.hasNextLine()) {
+                String dateBookingIdLine = scanner.nextLine();
+
+                if (dateBookingIdLine.equals("END")) {
+                    endOfBooking = true; // End of current booking
+                } else {
+                    String[] parts = dateBookingIdLine.split(";");
+                    LocalDate date = LocalDate.parse(parts[0]);
+                    int bookingId = Integer.parseInt(parts[1]);
+                    String name = parts[2];
+                    double haircutPrice = Double.parseDouble(parts[3]);
+
+                    System.out.println("Debug: Date: " + date + ", Booking ID: " + bookingId + ", Name: " + name + ", Haircut Price: " + haircutPrice);
+
+                    if (!endOfBooking) {
+                        Booking currentBooking = new Booking(bookingId, currentDay);
+                        if (!"null".equals(name)) {
+                            currentBooking.getCustomer().setName(name);
+                        } else {
+                            currentBooking.getCustomer().setName(null);
+                        }
+                        currentBooking.setHaircutPrice(haircutPrice);
+                        bookings.add(currentBooking);
+                    }
+
+                    if (currentDay == null || !currentDay.getDate().isEqual(date)) {
+                        currentDay = new Day(date.getDayOfMonth(), date.getMonthValue(), date.getYear());
+                        currentDay.initializeBookings();
+                        currentDay.setBookings(bookings);
+                        bookings = new ArrayList<>(8);
+                        calendar.addDay(currentDay);
+                    }
+                    System.out.println(days.size());
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Something went wrong while loading the file");
+            e.printStackTrace();
+        }
     }
 
     public void registerHolidays(Day day1, Day day2) {
