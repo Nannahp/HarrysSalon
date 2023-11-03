@@ -80,8 +80,19 @@ public class Calender {
     public void showDate(ArrayList<Day> daysInList) {
         for (Day d : daysInList) {//Print the date as a String
             String date = d.getDate().toString();
-            int spacesToAdd = 13 - date.length();
-            System.out.print("      " + d.toString() + " ".repeat(spacesToAdd));
+            if (d.getDay()<10) {
+                int spacesToAdd = 13 - date.length();
+                System.out.print("      " + d.toString() + " ".repeat(spacesToAdd));
+            }
+            else if (d.getDay() >10 || d.getMonth()> 9){
+                int spacesToAdd = 12 - date.length();
+                System.out.print("      " + d.toString() + " ".repeat(spacesToAdd));
+            }
+            else {
+                int spacesToAdd = 11 - date.length();
+                System.out.print("     " + d.toString() + " ".repeat(spacesToAdd));
+
+            }
         }
     }
 
