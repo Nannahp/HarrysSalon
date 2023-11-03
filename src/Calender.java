@@ -29,11 +29,9 @@ public class Calender {
                     .append(";")
                     .append(booking.getHaircutPrice())
                     .append(";");
-                    // Save product details (if any)
-                    for (Product product : booking.getProducts()) {
+                    for (Product product : booking.getProducts()) { // Save product details (if any)
                         bookingDetails.append(product.getId()).append(";");
                     }
-                    bookingDetails.append("END");
                     writer.println(bookingDetails.toString());
                 }
             }
@@ -44,15 +42,16 @@ public class Calender {
     }
 
     public void loadBookingDataFromFile(String fileName, Calender calendar) throws FileNotFoundException {
+        ProductBuilder productBuilder = new ProductBuilder();
         try (Scanner scanner = new Scanner(new FileReader(fileName))) {
             Day currentDay = null;
             boolean isNewDay = true;
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-
                 String[] parts = line.split(";");
-                if (parts.length < 5) {
+
+                if (parts.length < 4) {
                     System.err.println("Invalid format in the input file. Skipping line: " + line);
                     continue;
                 }
@@ -62,115 +61,46 @@ public class Calender {
                 String name = parts[2];
                 double haircutPrice = Double.parseDouble(parts[3]);
 
-                System.out.println("Loaded data: Date: " + date + ", Time Slot: " + timeSlot +
-                        ", Name: " + name + ", Haircut Price: " + haircutPrice);
-
                 if (isNewDay) {
                     currentDay = new Day(date.getDayOfMonth(), date.getMonthValue(), date.getYear());
                     days.add(currentDay);
-                    System.out.println("Creating a new Day for " + date);
-                    isNewDay = false; // New day is created, so reset the flag
+                    isNewDay = false; // New day is created, so reset the boolean
                 }
 
-                if (currentDay != null && timeSlot >= 1 && timeSlot <= 8) {
-                    Booking currentBooking = new Booking(timeSlot, currentDay);
-                    if (name != "null") {
-                        currentBooking.setCustomerName(name);
-                    } else {
-                        currentBooking.setCustomerName(null);
-                    }
-                    currentBooking.setHaircutPrice(haircutPrice);
-                    currentDay.addBooking(currentBooking, timeSlot);
-                    System.out.println("Added booking for Time Slot " + timeSlot + ": " + name + " - " + haircutPrice);
-                }
+                updateDay(currentDay, timeSlot, name, haircutPrice, productBuilder, parts);
 
-                if (timeSlot == 8) {
-                    isNewDay = true; // End of bookings for the current day, set flag to create a new day
-                    System.out.println("End of bookings for the current day.");
-                }
+                if (timeSlot == 8) {isNewDay = true;}
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {e.printStackTrace();}
+    }
+
+    private void updateDay(Day currentDay, int timeSlot, String name, double haircutPrice, ProductBuilder productBuilder, String[] parts) {
+        if (currentDay != null && timeSlot >= 1 && timeSlot <= 8) {
+            Booking currentBooking = new Booking(timeSlot, currentDay);
+            checkName(name, currentBooking);
+            currentBooking.setHaircutPrice(haircutPrice);
+            currentDay.addBooking(currentBooking, timeSlot);
+            addProductsToBooking(parts, productBuilder, currentBooking);
         }
     }
 
-
-
-
-    /*public void loadBookingDataFromFile(String fileName, Calender calendar) throws FileNotFoundException {
-        try (Scanner scanner = new Scanner(new FileReader(fileName))) {
-            Day currentDay = null;
-
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-
-                String[] parts = line.split(";");
-                LocalDate date = LocalDate.parse(parts[0]);
-                int timeSlot = Integer.parseInt(parts[1]);
-                String name = parts[2];
-                double haircutPrice = Double.parseDouble(parts[3]);
-
-                if (timeSlot == 1) {
-                    currentDay = new Day(date.getDayOfMonth(), date.getMonthValue(), date.getYear());
-                    days.add(currentDay);
-                }
-
-                if (currentDay != null && timeSlot >= 1 && timeSlot <= 8) {
-                    Booking booking = new Booking(timeSlot, currentDay);
-                    currentDay.addBooking(booking, timeSlot);
-                }
-
-                if (line.endsWith("END")) {
-                    currentDay = null; // End of bookings for the current day
-                }
+    private void addProductsToBooking(String[] parts, ProductBuilder productBuilder, Booking currentBooking) {
+        for (int i = 4; i < parts.length; i++) {
+            int productId = Integer.parseInt(parts[i]);
+            ArrayList<Product> products = productBuilder.getProducts();
+            if (productId >= 1 && productId <= products.size()) {
+                Product productToAdd = products.get(productId - 1);
+                currentBooking.addProduct(productToAdd); // Add product to the booking
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-
-
-    public void createBooking(LocalDate date, int bookingId, String name, double haircutPrice) {
-        Day day = searchForDate(date.getDayOfMonth(), date.getMonthValue(), date.getYear());
-        if (day == null) {
-            day = new Day(date.getDayOfMonth(), date.getMonthValue(), date.getYear());
-            addDay(day);
         }
     }
 
-    /*public void loadBookingDataFromFile(String filename) {
-        ArrayList<Product> availableProducts = new ProductBuilder().getProducts();
-        boolean endOfBooking = false;
-
-        try (Scanner scanner = new Scanner(new FileReader(filename))) {
-            while (scanner.hasNextLine()) {
-                String dateBookingIdLine = scanner.nextLine();
-
-                if (dateBookingIdLine.equals("END")) {
-                    continue;
-                } String[] parts = dateBookingIdLine.split(";");
-                LocalDate date = LocalDate.parse(parts[0]);
-                int bookingId = Integer.parseInt(parts[1]);
-                String name = parts[2];
-                double haircutPrice = Double.parseDouble(parts[3]);
-
-                createBooking(date, bookingId, name, haircutPrice);
-            }
-
-        } catch (IOException e) {
-            System.out.println("Something went wrong while loading the file");
-            e.printStackTrace();
+    private void checkName(String name, Booking currentBooking) {
+        if (!"null".equals(name)) {
+            currentBooking.setCustomerName(name);
+        } else {
+            currentBooking.setCustomerName(null);
         }
-    }*/
-
-    public Day getDayByDate(LocalDate targetDate) {
-        for (Day day : days) {
-            if (day.getDate().equals(targetDate)) {
-                return day;
-            }
-        }
-        return null; // Return null if no matching Day is found
     }
 
     public void registerHolidays(Day day1, Day day2) {
@@ -249,12 +179,6 @@ public class Calender {
                 System.out.printf("%17s", d.buildDayCalender()[i]);
             }
             System.out.println();
-        }
-    }
-
-    public void showCalenderList() {
-        for (Day day : days) {
-            System.out.println(day.toString());
         }
     }
 

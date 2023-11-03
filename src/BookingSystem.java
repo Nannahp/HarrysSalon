@@ -56,7 +56,7 @@ public class BookingSystem {
     public void run() throws FileNotFoundException {
         createFile(filename);
         loadBookingData();
-        //addHardcodedDay();
+        addHardcodedDay();
         showIntroMessage();
         runLogin();
         while (systemRunning) {
@@ -69,10 +69,8 @@ public class BookingSystem {
         File file = new File(filename);
         try {
             if (file.exists()) {
-                System.out.println("File already exists.");
             } else {
                 if (file.createNewFile()) {
-                    System.out.println("File created: " + file.getName());
                 } else {
                     System.out.println("File could not be created.");
                 }
