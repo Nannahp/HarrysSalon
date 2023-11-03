@@ -46,7 +46,7 @@ public class BookingSystem {
     });
 
     public void run() {
-        addHardcodedDay();
+        //addHardcodedDay();
         showIntroMessage();
         runLogin();
         while (systemRunning) {
@@ -252,7 +252,6 @@ public class BookingSystem {
     private Day[] createNextDays(Day day){
         Day[] days = new Day[4];
         for(int i =0; i<4; i++){
-            if (day.getYear()>202)
             days[i] = calender.searchForDate(day.getDay() + (i+1), day.getMonth(), day.getYear());
         }
         return days;
