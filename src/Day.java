@@ -14,6 +14,7 @@ public class Day {
     private boolean holiday;
     private boolean weekend;
 
+    // ifgowie
     public Day(int day, int month, int year) {
         try {
             this.date = LocalDate.of(year, month, day);

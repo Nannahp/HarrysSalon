@@ -3,9 +3,6 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-// This works
-
-
 public class BookingSystem {
     private Scanner in = new Scanner(System.in);
     Calender calender = new Calender("Harry's calender");
