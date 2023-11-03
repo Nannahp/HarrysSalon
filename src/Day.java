@@ -61,7 +61,7 @@ public class Day {
     public void setBookings(ArrayList<Booking> bookings) {
         this.bookings = bookings;
     }
-    private void initializeBookings() {
+    public void initializeBookings() {
         for (int i = 0; i < 8; i++) {
             bookings.add(new Booking(i, this));
         }
@@ -92,6 +92,21 @@ public class Day {
             weekend = true;
         }
     }
+
+
+    public void addBooking(Booking booking, int timeslotID) {
+        if (timeslotID >= 1 && timeslotID <= 8) {
+            int index = timeslotID - 1; // Adjust for 0-based index
+            if (bookings.size() > index) {
+                bookings.set(index, booking); // Replace the existing booking at the time slot
+            } else {
+                bookings.add(booking); // Add a new booking if the index doesn't exist yet
+            }
+        }
+    }
+
+
+
 
 
 public void addBookingToTimeSlot(int timeslotId) {
@@ -256,7 +271,7 @@ public void addBookingToTimeSlot(int timeslotId) {
         }
     }
 
-    private void addProductsByID(int chosenProductID, ArrayList<Product> products) {
+    public void addProductsByID(int chosenProductID, ArrayList<Product> products) {
         switch (chosenProductID) {
             case 1 -> products.add(new Product(availableProducts.get(0).getId(), availableProducts.get(0).getName(), availableProducts.get(0).getPrice()));
             case 2 -> products.add(new Product(availableProducts.get(1).getId(), availableProducts.get(1).getName(), availableProducts.get(1).getPrice()));
@@ -331,16 +346,31 @@ public void removeProducts(ArrayList<Product> products){
 
     public String[] buildOpenDayMessage() {
         String[] dayCalender = new String[bookings.size()];
-
-        for (int i = 0; i < bookings.size(); i++) {
-            Booking booking = bookings.get(i);
+           /* Booking booking = bookings.get(i);
             String customerName = booking.getCustomer().getName();
 
             if (customerName == null) { //booking has no customer yet
                 dayCalender[i] = (i + 10 + ": Available  ");
             } else {
                 dayCalender[i] = (i + 10 + ": Booked     ");
-            }
+            }*/
+            for (int i = 0; i < dayCalender.length; i++) {
+                Booking booking = bookings.get(i);
+
+                if (booking == null) {
+                    dayCalender[i] = (i + 10 + ": Available  ");
+                } else {
+                    Customer customer = booking.getCustomer();
+                    if (customer == null) {
+                        dayCalender[i] = (i + 10 + ": Available  ");
+                    } else {
+                        if (customer.getName() == null || "null".equals(customer.getName())) {
+                            dayCalender[i] = (i + 10 + ": Available  ");
+                        } else {
+                            dayCalender[i] = (i + 10 + ": Booked     ");
+                        }
+                    }
+                }
         }
         return dayCalender;
     }

@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -9,7 +13,12 @@ public class BookingSystem {
     boolean systemRunning = true;
     private boolean isBeforeToday;
 
-    public static void main(String[] args) {
+    String workingDirectory = System.getProperty("user.dir");
+    String filenameOnly = "/src/BookingSaved.txt";
+    String filename = Paths.get(workingDirectory, filenameOnly).toString();
+
+
+    public static void main(String[] args) throws FileNotFoundException {
         new BookingSystem().run();
     }
 
@@ -45,14 +54,35 @@ public class BookingSystem {
             "3. Go back to main menu"
     });
 
-    public void run() {
-        //addHardcodedDay();
+    public void run() throws FileNotFoundException {
+        createFile(filename);
+        loadBookingData();
+        addHardcodedDay();
         showIntroMessage();
         runLogin();
         while (systemRunning) {
             runMainMenu();
         }
+        calender.saveBookingDataToFile(filename);
     }
+    private void createFile(String filename) {
+        File file = new File(filename);
+        try {
+            if (file.exists()) {
+            } else {
+                if (file.createNewFile()) {
+                } else {
+                    System.out.println("File could not be created.");
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("An error occurred: " + e.getMessage());
+        }
+    }
+    private void loadBookingData() throws FileNotFoundException {
+        calender.loadBookingDataFromFile(filename, calender);
+    }
+
 
     //Hardcoded intro message before login
     private void showIntroMessage() {
@@ -518,7 +548,7 @@ private void editProducts(Day day, int timeSlotId) {
 
 
     public void addHardcodedDay() {
-        Day hardcodedDay = new Day(3, 3, 2020);
+        Day hardcodedDay = new Day(03, 3, 2020);
         Customer hardcodedCustomer = new Customer("H. Uman");
         ArrayList<Booking> hardcodedBookings = new ArrayList<>();
         hardcodedBookings.add(new Booking(1, hardcodedDay, hardcodedCustomer, 345, randomProducts()));

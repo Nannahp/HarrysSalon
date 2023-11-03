@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.Scanner;
+
 
 public class Booking {
     private int id;
@@ -9,6 +9,7 @@ public class Booking {
     private double productPrice;
     private double bookingTotal;
     private Day day;
+    private boolean bookingEnded;
     private ArrayList<Product> products = new ArrayList<Product>();
 
     public Booking (int id, Day day) {
@@ -17,6 +18,7 @@ public class Booking {
         this.customer = new Customer(null);
         this.haircutPrice = 0;
         this.bookingTotal = calcTotal();
+        bookingEnded = false;
 
         switch (id) {
             case 0 -> this.setTimeSlot("10:00 - 11:00");
@@ -51,7 +53,12 @@ public class Booking {
         }
     }
 
+    public Booking(int timeSlot, String name, double haircutPrice) {
 
+    }
+
+    public int getId() {return this.id; }
+    public void addProduct(Product product) {products.add(product);}
     public String getTimeSlot() {
         return timeSlot;
     }

@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.io.*;
 
 public class Calender {
     String calenderName;
@@ -13,6 +13,88 @@ public class Calender {
 
     public void addDay(Day day) {
         days.add(day);
+    }
+    public void saveBookingDataToFile(String fileName) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            for (Day day : days) {
+                for (Booking booking : day.getBookings()) {
+                    StringBuilder bookingDetails = new StringBuilder();
+                    bookingDetails.append(day.getDate())
+                            .append(";")
+                            .append(booking.getId())
+                            .append(";")
+                            .append(String.valueOf(booking.getCustomer().getName()))
+                            .append(";")
+                            .append(booking.getHaircutPrice())
+                            .append(";");
+                    for (Product product : booking.getProducts()) { // Save product details (if any)
+                        bookingDetails.append(product.getId()).append(";");
+                    }
+                    writer.println(bookingDetails.toString());
+                }
+            }
+            System.out.println("Booking data saved successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadBookingDataFromFile(String fileName, Calender calendar) throws FileNotFoundException {
+        ProductBuilder productBuilder = new ProductBuilder();
+        try (Scanner scanner = new Scanner(new FileReader(fileName))) {
+            Day currentDay = null;
+            boolean isNewDay = true;
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split(";");
+
+                if (parts.length < 4) {
+                    System.err.println("Invalid format in the input file. Skipping line: " + line);
+                    continue;
+                }
+                LocalDate date = LocalDate.parse(parts[0]);
+                int timeSlot = Integer.parseInt(parts[1]);
+                String name = parts[2];
+                double haircutPrice = Double.parseDouble(parts[3]);
+
+                if (isNewDay) {
+                    currentDay = new Day(date.getDayOfMonth(), date.getMonthValue(), date.getYear());
+                    days.add(currentDay);
+                    isNewDay = false; // New day is created, so reset the boolean
+                }
+
+                updateDay(currentDay, timeSlot, name, haircutPrice, productBuilder, parts);
+
+                if (timeSlot == 8) {isNewDay = true;}
+            }
+        } catch (IOException e) {e.printStackTrace();}
+    }
+    private void updateDay(Day currentDay, int timeSlot, String name, double haircutPrice, ProductBuilder productBuilder, String[] parts) {
+        if (currentDay != null && timeSlot >= 1 && timeSlot <= 8) {
+            Booking currentBooking = new Booking(timeSlot, currentDay);
+            checkName(name, currentBooking);
+            currentBooking.setHaircutPrice(haircutPrice);
+            currentDay.addBooking(currentBooking, timeSlot);
+            addProductsToBooking(parts, productBuilder, currentBooking);
+        }
+    }
+    private void addProductsToBooking(String[] parts, ProductBuilder productBuilder, Booking currentBooking) {
+        for (int i = 4; i < parts.length; i++) {
+            int productId = Integer.parseInt(parts[i]);
+            ArrayList<Product> products = productBuilder.getProducts();
+            if (productId >= 1 && productId <= products.size()) {
+                Product productToAdd = products.get(productId - 1);
+                currentBooking.addProduct(productToAdd); // Add product to the booking
+            }
+        }
+    }
+    private void checkName(String name, Booking currentBooking) {
+        if (!"null".equals(name)) {
+            currentBooking.setCustomerName(name);
+        } else {
+            currentBooking.setCustomerName(null);
+        }
     }
 
     public void registerHolidays(Day day1, Day day2) {
@@ -105,11 +187,6 @@ public class Calender {
         }
     }
 
-    public void showCalenderList() {
-        for (Day day : days) {
-            System.out.println(day.toString());
-        }
-    }
 
 
 }
