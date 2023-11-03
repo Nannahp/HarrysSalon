@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -25,7 +26,7 @@ public class Day {
         }
     }
 
-    private void initializeBookings() {
+    public void initializeBookings() {
         for (int i = 1; i < 9; i++) {
             bookings.add(new Booking(i, this));
         }
@@ -238,6 +239,8 @@ public class Day {
         }
     }
 
+
+
     private void displayBookingProducts(ArrayList<Product> products) {
         products = updateProductsId(products);
 
@@ -292,10 +295,7 @@ public class Day {
         } else {
             System.out.println("You can't remove a product if there is not products in the list.");
         }
-
     }
-
-
 
     public ArrayList<Booking> getBookings() {
         return bookings;
